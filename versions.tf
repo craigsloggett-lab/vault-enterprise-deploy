@@ -1,6 +1,10 @@
 terraform {
-  # Version v1.7.0 is the first version to introduce the `terraform test` command.
-  required_version = "~> 1.7"
+  required_version = "~> 1.0"
 
-  required_providers {}
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
 }
