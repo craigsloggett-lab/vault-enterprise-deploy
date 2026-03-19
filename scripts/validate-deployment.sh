@@ -9,10 +9,11 @@ log() {
 read_terraform_outputs() {
   log "Reading Terraform outputs."
 
-  bastion_ip=$(terraform output -raw bastion_public_ip)
-  vault_url=$(terraform output -raw vault_url)
-  vault_ips=$(terraform output -json vault_private_ips | jq -r '.[]')
-  tg_arn=$(terraform output -raw vault_target_group_arn)
+  repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+  bastion_ip=$(cd "${repo_root}" && terraform output -raw bastion_public_ip)
+  vault_url=$(cd "${repo_root}" && terraform output -raw vault_url)
+  vault_ips=$(cd "${repo_root}" && terraform output -json vault_private_ips | jq -r '.[]')
+  tg_arn=$(cd "${repo_root}" && terraform output -raw vault_target_group_arn)
 
   log "  Bastion IP:" "${bastion_ip}"
   log "  Vault URL:" "${vault_url}"
