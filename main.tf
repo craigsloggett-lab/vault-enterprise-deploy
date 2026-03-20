@@ -2,25 +2,25 @@ data "aws_route53_zone" "vault" {
   name = var.route53_zone_name
 }
 
-data "aws_ami" "hc_base" {
+data "aws_ami" "selected" {
   most_recent = true
-  owners      = ["888995627335"]
+  owners      = [var.ec2_ami_owner]
 
   filter {
     name   = "name"
-    values = ["hc-base-ubuntu-2404-amd64-*"]
+    values = [var.ec2_ami_name]
   }
 }
 
 module "vault" {
   source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v4.0.2"
 
-  project_name      = "vault-ent"
+  project_name      = var.project_name
   route53_zone      = data.aws_route53_zone.vault
   vault_license     = var.vault_license
   ec2_key_pair_name = var.ec2_key_pair_name
-  ec2_ami           = data.aws_ami.hc_base
+  ec2_ami           = data.aws_ami.selected
 
-  nlb_internal            = false
-  vault_api_allowed_cidrs = ["0.0.0.0/0"]
+  nlb_internal            = var.nlb_internal
+  vault_api_allowed_cidrs = var.vault_api_allowed_cidrs
 }
