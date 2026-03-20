@@ -13,7 +13,7 @@ data "aws_ami" "selected" {
 }
 
 module "vault" {
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v4.0.2"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v4.0.3"
 
   project_name      = var.project_name
   route53_zone      = data.aws_route53_zone.vault
