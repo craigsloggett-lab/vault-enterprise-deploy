@@ -1,0 +1,10 @@
+project_name      = "example"
+route53_zone_name = "example.com"
+vault_license     = "your-vault-enterprise-license-here"
+
+ec2_key_pair_name = "my-key-pair"
+ec2_ami_owner     = "123456789012"
+ec2_ami_name      = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"
+
+nlb_internal            = false
+vault_api_allowed_cidrs = ["0.0.0.0/0"]
