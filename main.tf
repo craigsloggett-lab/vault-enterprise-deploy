@@ -13,9 +13,9 @@ data "aws_ami" "hc_base" {
 }
 
 module "vault" {
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v4.0.1"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v4.0.2"
 
-  project_name      = "vault-enterprise-1-21-4"
+  project_name      = "vault-ent"
   route53_zone      = data.aws_route53_zone.vault
   vault_license     = var.vault_license
   ec2_key_pair_name = var.ec2_key_pair_name
