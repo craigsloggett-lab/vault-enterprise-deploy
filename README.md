@@ -2,6 +2,53 @@
 
 An infrastructure as code repository used to deploy a Vault Enterprise cluster to AWS.
 
+## Cluster Validation
+
+To validate the cluster following a deploying, run the `validate-deployment.sh` helper script in the `scripts/` directory.
+
+This will check the NLB target health and verify each node's configuration. The validation will show the Vault node's health
+status which, if the cluster is uninitialized, will be unhealthy.
+
+To initialize the cluster, run the `initialize-cluster.sh` helper script which is also within the `scripts/` directory.
+
+This will initialize the Vault cluster and save recovery keys and the root token to `vault-init.json`.
+
+### Plugin Deployment
+
+If you are looking to work on Vault plugin development, the `scripts/` directory also contains two helper scripts to get
+a plugin deployed to the cluster:
+
+| Script | Purpose |
+|--------|---------|
+| `deploy-plugin.sh <zip-url>` | Used for first-time plugin setup. It downloads the release ZIP, configures `plugin_directory`, restarts Vault one node at a time, and registers the plugin. |
+| `deploy-local-plugin.sh <binary-path>` | Used to deploy an unreleased build. It SCPs a locally built binary to all nodes, re-registers, and reloads the plugin without restarting Vault. Requires `deploy-plugin.sh` to have been run first. |
+
+#### Usage
+
+Export the `VAULT_TOKEN` environment variable using the `vault-init.json` file created when initializing the cluster:
+
+```sh
+export VAULT_TOKEN=$(jq -r '.root_token' vault-init.json)
+```
+
+Deploy a released build of a Vault plugin:
+
+```sh
+./scripts/deploy-plugin.sh \
+  https://github.com/example/vault-plugin-secrets-example/releases/download/v0.1.0/vault-plugin-secrets-example-0.1.0-linux-amd64.zip
+
+vault secrets enable -path=example vault-plugin-secrets-example
+```
+
+Deploy an unreleased build of a Vault plugin from a local directory:
+
+```sh
+# Build the plugin for linux/amd64 in your plugin repo, then:
+./scripts/deploy-local-plugin.sh /path/to/builds/vault-plugin-secrets-example-linux-amd64
+```
+
+The local script strips the `-linux-amd64` suffix automatically when registering with Vault. No restart is needed since the plugin is reloaded in place and existing mounts and configuration are preserved.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
