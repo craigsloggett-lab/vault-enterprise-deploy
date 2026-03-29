@@ -1,4 +1,5 @@
-project_name      = "example"
+project_name      = "vault"
+vpc_name          = "hashistack"
 route53_zone_name = "example.com"
 vault_license     = "your-vault-enterprise-license-here"
 

@@ -3,6 +3,11 @@ variable "project_name" {
   description = "Name prefix for all resources."
 }
 
+variable "vpc_name" {
+  type        = string
+  description = "Name tag of the existing VPC."
+}
+
 variable "route53_zone_name" {
   type        = string
   description = "Name of the existing Route 53 hosted zone."
