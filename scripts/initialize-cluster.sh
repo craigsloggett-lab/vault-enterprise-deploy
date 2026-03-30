@@ -68,6 +68,8 @@ wait_for_vault() {
 }
 
 initialize_vault() {
+  init_file="$(cd "$(dirname "$0")" && pwd)/vault-init.json"
+
   # Check if Vault is already initialized.
   if vault status -format=json 2>/dev/null | jq -e '.initialized == true' >/dev/null 2>&1; then
     log "Vault is already initialized."
@@ -77,20 +79,26 @@ initialize_vault() {
 
   log "Initializing Vault cluster."
 
-  init_file="vault-init.json"
   vault operator init -format=json >"${init_file}"
   cat "${init_file}"
 
   log "Initialization complete."
-  log "IMPORTANT: The root token and recovery keys have been saved to ${init_file}." "" "!!"
+  log "IMPORTANT: The root token and recovery keys have been saved to vault-init.json." "" "!!"
   log "           Store this file securely and delete it from disk." "" "  "
 }
 
 configure_snapshots() {
+  init_file="$(cd "$(dirname "$0")" && pwd)/vault-init.json"
+
+  if [ ! -f "${init_file}" ]; then
+    log "Skipping snapshot configuration (vault-init.json not found)."
+    return
+  fi
+
   log "Configuring automated Raft snapshots."
 
   export VAULT_TOKEN
-  VAULT_TOKEN=$(jq -r '.root_token' vault-init.json)
+  VAULT_TOKEN=$(jq -r '.root_token' "${init_file}")
 
   # Fetch the snapshot config from the Vault node and apply it via the tunnel.
   # shellcheck disable=SC2086
