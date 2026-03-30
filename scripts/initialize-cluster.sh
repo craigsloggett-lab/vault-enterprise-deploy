@@ -93,11 +93,6 @@ configure_snapshots() {
   VAULT_TOKEN=$(jq -r '.root_token' vault-init.json)
 
   # Fetch the snapshot config from the Vault node and apply it via the tunnel.
-  # Accept the bastion host key if not already known.
-  if ! ssh-keygen -F "${bastion_ip}" >/dev/null 2>&1; then
-    ssh-keyscan -H "${bastion_ip}" >>~/.ssh/known_hosts 2>/dev/null
-  fi
-
   # shellcheck disable=SC2086
   ssh ${ssh_opts} -J "${ssh_user}@${bastion_ip}" "${ssh_user}@${vault_ip}" \
     "sudo cat /etc/vault.d/snapshot.json" |
@@ -129,7 +124,7 @@ wait_for_unseal() {
 main() {
   set -ef
 
-  ssh_opts="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR"
+  ssh_opts="-o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 -o LogLevel=ERROR"
 
   # Colors are automatically disabled if output is not a terminal.
   ! [ -t 2 ] || {
