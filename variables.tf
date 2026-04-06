@@ -34,6 +34,12 @@ variable "ec2_ami_name" {
   description = "Name filter for the AMI (supports wildcards)."
 }
 
+variable "vault_server_instance_type" {
+  type        = string
+  description = "EC2 instance type for Vault server nodes."
+  default     = "m5.large"
+}
+
 variable "nlb_internal" {
   type        = bool
   description = "Whether the NLB is internal."
