@@ -23,7 +23,7 @@ read_terraform_outputs() {
 
   repo_root="$(cd "$(dirname "$0")/.." && pwd)"
   bastion_ip=$(cd "${repo_root}" && terraform output -raw bastion_public_ip)
-  vault_ips=$(cd "${repo_root}" && terraform output -json vault_private_ips | jq -r '.[]')
+  vault_ips=$(cd "${repo_root}" && terraform output -json vault_server_private_ips | jq -r '.[]')
 
   log "  Bastion IP:" "${bastion_ip}"
   # shellcheck disable=SC2086

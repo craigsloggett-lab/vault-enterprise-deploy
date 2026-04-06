@@ -11,7 +11,7 @@ read_terraform_outputs() {
 
   repo_root="$(cd "$(dirname "$0")/.." && pwd)"
   bastion_ip=$(cd "${repo_root}" && terraform output -raw bastion_public_ip)
-  node_ips=$(cd "${repo_root}" && terraform output -json vault_private_ips | jq -r '.[]')
+  node_ips=$(cd "${repo_root}" && terraform output -json vault_server_private_ips | jq -r '.[]')
   ami_name=$(cd "${repo_root}" && terraform output -raw ec2_ami_name)
 
   case "${ami_name}" in
