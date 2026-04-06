@@ -56,7 +56,7 @@ main() {
 
   for ip in ${node_ips}; do
     remote_exec "${ip}" \
-      "sudo journalctl -u vault.service | tail -50"
+      "sudo journalctl -u vault.service | grep -v '[INFO]  http: TLS handshake error from'"
   done
 }
 
