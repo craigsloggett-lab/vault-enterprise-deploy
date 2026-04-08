@@ -55,8 +55,7 @@ main() {
   read_terraform_outputs
 
   for ip in ${node_ips}; do
-    remote_exec "${ip}" \
-      "sudo journalctl -u vault.service | grep -v '[INFO]  http: TLS handshake error from'"
+    remote_exec "${ip}" "sudo journalctl -u vault.service"
   done
 }
 
