@@ -55,7 +55,8 @@ main() {
   read_terraform_outputs
 
   for ip in ${node_ips}; do
-    remote_exec "${ip}" "sudo journalctl -u vault.service"
+    log "Showing cluster startup messages for:" "${ip}"
+    remote_exec "${ip}" "sudo journalctl -u vault.service | head -n 59"
   done
 }
 
