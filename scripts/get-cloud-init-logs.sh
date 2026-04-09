@@ -43,7 +43,7 @@ remote_exec() {
 main() {
   set -ef
 
-  ssh_opts=""
+  ssh_opts='-o StrictHostKeyChecking=no -o CheckHostIP=no -o UserKnownHostsFile=/dev/null -o LogLevel=quiet'
 
   # Colors are automatically disabled if output is not a terminal.
   ! [ -t 2 ] || {
