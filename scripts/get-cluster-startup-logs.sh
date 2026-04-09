@@ -2,6 +2,13 @@
 # Usage: ./check-journald.sh
 
 log() {
+  # Colors are automatically disabled if output is not a terminal
+  ! [ -t 2 ] || {
+    c1='\033[1;33m'
+    c2='\033[1;34m'
+    c3='\033[m'
+  }
+
   printf '%b%s %b%s%b %s\n' \
     "${c1}" "${3:-->}" "${c3}${2:+$c2}" "$1" "${c3}" "$2" >&2
 }
@@ -9,10 +16,22 @@ log() {
 read_terraform_outputs() {
   log "Reading Terraform outputs."
 
-  repo_root="$(cd "$(dirname "$0")/.." && pwd)"
-  bastion_ip=$(cd "${repo_root}" && terraform output -raw bastion_public_ip)
-  node_ips=$(cd "${repo_root}" && terraform output -json vault_server_private_ips | jq -r '.[]')
-  ami_name=$(cd "${repo_root}" && terraform output -raw ec2_ami_name)
+  # Switch to the Terraform root directory.
+  cd "$(dirname "$0")/.."
+
+  terraform_output="$(terraform output -json)"
+  bastion_ip="$(
+    printf '%s\n' "${terraform_output}" |
+      jq -r '.bastion_public_ip.value'
+  )"
+  node_ips="$(
+    printf '%s\n' "${terraform_output}" |
+      jq -r '.vault_server_private_ips.value.[]'
+  )"
+  ami_name="$(
+    printf '%s\n' "${terraform_output}" |
+      jq -r '.ec2_ami_name.value'
+  )"
 
   case "${ami_name}" in
     *ubuntu*) ssh_user="ubuntu" ;;
@@ -28,35 +47,25 @@ read_terraform_outputs() {
   log "  SSH user:" "${ssh_user}"
 }
 
-bastion_exec() {
-  # shellcheck disable=SC2029,SC2086
-  ssh ${ssh_opts} "${ssh_user}@${bastion_ip}" "$@"
-}
-
-remote_exec() {
-  target_ip="${1:?target IP required}"
-  shift
-  # shellcheck disable=SC2086
-  ssh ${ssh_opts} -J "${ssh_user}@${bastion_ip}" "${ssh_user}@${target_ip}" "$@"
-}
-
 main() {
   set -ef
 
-  ssh_opts='-o StrictHostKeyChecking=no -o CheckHostIP=no -o UserKnownHostsFile=/dev/null -o LogLevel=quiet'
-
-  # Colors are automatically disabled if output is not a terminal.
-  ! [ -t 2 ] || {
-    c1='\033[1;33m'
-    c2='\033[1;34m'
-    c3='\033[m'
-  }
-
+  # Get host IPs
   read_terraform_outputs
+
+  # Remove stale bastion host key
+  ssh-keygen -R "${bastion_ip}" >/dev/null 2>&1
+
+  # Add Bastion host key to known_hosts without confirmation
+  set -- -o StrictHostKeyChecking=no -o LogLevel=ERROR
+  ssh "${@}" "${ssh_user}@${bastion_ip}" ':'
+
+  # Set SSH options for all SSH commands
+  set -- "${@}" -o UserKnownHostsFile=/dev/null
 
   for ip in ${node_ips}; do
     log "Showing cluster startup messages for:" "${ip}"
-    remote_exec "${ip}" "sudo journalctl -u vault.service | head -n 59"
+    ssh "${@}" -J "${ssh_user}@${bastion_ip}" "${ssh_user}@${ip}" 'sudo journalctl -u vault.service | head -n 59'
   done
 }
 
