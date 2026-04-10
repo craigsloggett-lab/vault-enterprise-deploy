@@ -85,6 +85,11 @@ main() {
     log "Showing cloud-init log messages for:" "${ip}"
     ssh "${@}" -J "${ssh_user}@${bastion_ip}" "${ssh_user}@${ip}" 'sudo journalctl -u cloud-final'
   done
+
+  # Present SSH jump commands for convenience.
+  for ip in ${node_ips}; do
+    log "To login to ${ip}:" "ssh -J ubuntu@${bastion_ip} ubuntu@${ip}"
+  done
 }
 
 main "$@"
