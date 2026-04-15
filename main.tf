@@ -43,13 +43,13 @@ data "aws_ami" "selected" {
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=f7913a24b840fcd8257a9f04544e1313aa1cd237"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=1c79b335dae47e4daf990fe73c2a65327c0f7dc2"
 
-  project_name      = var.project_name
-  route53_zone      = data.aws_route53_zone.vault
-  vault_license     = var.vault_license
-  ec2_key_pair_name = var.ec2_key_pair_name
-  ec2_ami           = data.aws_ami.selected
+  project_name             = var.project_name
+  route53_zone             = data.aws_route53_zone.vault
+  vault_enterprise_license = var.vault_enterprise_license
+  ec2_key_pair_name        = var.ec2_key_pair_name
+  ec2_ami                  = data.aws_ami.selected
 
   existing_vpc = {
     vpc_id             = data.aws_vpc.selected.id
