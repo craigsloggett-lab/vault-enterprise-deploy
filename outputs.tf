@@ -31,4 +31,5 @@ output "vault_snapshots_bucket" {
 output "vault_tls_ca_bundle" {
   description = "Vault PKI Managed TLS CA Bundle"
   value       = module.vault.vault_tls_ca_bundle
+  sensitive   = true
 }
