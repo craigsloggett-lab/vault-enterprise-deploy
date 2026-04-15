@@ -28,8 +28,8 @@ output "vault_snapshots_bucket" {
   value       = module.vault.vault_snapshots_bucket
 }
 
-output "vault_bootstrap_tls_ca_cert" {
-  description = "Bootstrap TLS CA certificate"
-  value       = module.vault.vault_bootstrap_tls_ca_cert
-  sensitive   = true
+output "vault_tls_ca_bundle" {
+  description = "Vault PKI Managed TLS CA Bundle"
+  value       = module.vault.vault_tls_ca_bundle
+  sensitive   = false
 }

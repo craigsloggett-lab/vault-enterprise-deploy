@@ -67,7 +67,7 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 4a0fd8852770c2d92fef356e313f4f2c80ec6d5c |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 7d9679c28804e9fe6ee71a04bd6461628df95516 |
 
 ## Inputs
 
@@ -101,8 +101,8 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 | <a name="output_bastion_public_ip"></a> [bastion\_public\_ip](#output\_bastion\_public\_ip) | Public IP of the bastion host. |
 | <a name="output_ec2_ami_name"></a> [ec2\_ami\_name](#output\_ec2\_ami\_name) | Name of the AMI used for EC2 instances. |
 | <a name="output_vault_asg_name"></a> [vault\_asg\_name](#output\_vault\_asg\_name) | Name of the Vault Auto Scaling Group. |
-| <a name="output_vault_bootstrap_tls_ca_cert"></a> [vault\_bootstrap\_tls\_ca\_cert](#output\_vault\_bootstrap\_tls\_ca\_cert) | Bootstrap TLS CA certificate |
 | <a name="output_vault_snapshots_bucket"></a> [vault\_snapshots\_bucket](#output\_vault\_snapshots\_bucket) | S3 bucket for Vault snapshots. |
 | <a name="output_vault_target_group_arn"></a> [vault\_target\_group\_arn](#output\_vault\_target\_group\_arn) | ARN of the Vault NLB target group. |
+| <a name="output_vault_tls_ca_bundle"></a> [vault\_tls\_ca\_bundle](#output\_vault\_tls\_ca\_bundle) | Vault PKI Managed TLS CA Bundle |
 | <a name="output_vault_url"></a> [vault\_url](#output\_vault\_url) | URL of the Vault cluster. |
 <!-- END_TF_DOCS -->
