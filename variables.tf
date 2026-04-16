@@ -63,8 +63,3 @@ variable "hcp_terraform_organization_name" {
   description = "HCP Terraform organization name used to scope the JWT auth role for the Vault admin workspace."
   default     = "craigsloggett-lab"
 }
-
-variable "hcp_terraform_workspace_id" {
-  type        = string
-  description = "HCP Terraform workspace ID used to scope the JWT auth role for the Vault admin workspace."
-}

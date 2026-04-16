@@ -64,6 +64,5 @@ module "vault" {
   hcp_terraform = {
     hostname          = var.hcp_terraform_hostname
     organization_name = var.hcp_terraform_organization_name
-    workspace_id      = var.hcp_terraform_workspace_id
   }
 }
