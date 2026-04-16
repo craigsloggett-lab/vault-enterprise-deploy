@@ -67,7 +67,7 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 7d08d9d53cf6ea7afe282c993acb654252327591 |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 493ddf97b41d49a71ab2f625d2a98b042ea54140 |
 
 ## Inputs
 
@@ -76,6 +76,9 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 | <a name="input_ec2_ami_name"></a> [ec2\_ami\_name](#input\_ec2\_ami\_name) | Name filter for the AMI (supports wildcards). | `string` | n/a | yes |
 | <a name="input_ec2_ami_owner"></a> [ec2\_ami\_owner](#input\_ec2\_ami\_owner) | AWS account ID of the AMI owner. | `string` | n/a | yes |
 | <a name="input_ec2_key_pair_name"></a> [ec2\_key\_pair\_name](#input\_ec2\_key\_pair\_name) | Name of an existing EC2 key pair for SSH access. | `string` | n/a | yes |
+| <a name="input_hcp_terraform_hostname"></a> [hcp\_terraform\_hostname](#input\_hcp\_terraform\_hostname) | HCP Terraform hostname name used to scope the JWT auth role for the Vault admin workspace. | `string` | `"app.terraform.io"` | no |
+| <a name="input_hcp_terraform_organization_name"></a> [hcp\_terraform\_organization\_name](#input\_hcp\_terraform\_organization\_name) | HCP Terraform organization name used to scope the JWT auth role for the Vault admin workspace. | `string` | `"craigsloggett-lab"` | no |
+| <a name="input_hcp_terraform_workspace_id"></a> [hcp\_terraform\_workspace\_id](#input\_hcp\_terraform\_workspace\_id) | HCP Terraform workspace ID used to scope the JWT auth role for the Vault admin workspace. | `string` | n/a | yes |
 | <a name="input_nlb_internal"></a> [nlb\_internal](#input\_nlb\_internal) | Whether the NLB is internal. | `bool` | `true` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name prefix for all resources. | `string` | n/a | yes |
 | <a name="input_route53_zone_name"></a> [route53\_zone\_name](#input\_route53\_zone\_name) | Name of the existing Route 53 hosted zone. | `string` | n/a | yes |

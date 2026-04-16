@@ -51,3 +51,20 @@ variable "vault_api_allowed_cidrs" {
   description = "CIDR blocks allowed to reach the Vault API (port 8200) from outside the VPC. Only effective when nlb_internal is false."
   default     = []
 }
+
+variable "hcp_terraform_hostname" {
+  type        = string
+  description = "HCP Terraform hostname name used to scope the JWT auth role for the Vault admin workspace."
+  default     = "app.terraform.io"
+}
+
+variable "hcp_terraform_organization_name" {
+  type        = string
+  description = "HCP Terraform organization name used to scope the JWT auth role for the Vault admin workspace."
+  default     = "craigsloggett-lab"
+}
+
+variable "hcp_terraform_workspace_id" {
+  type        = string
+  description = "HCP Terraform workspace ID used to scope the JWT auth role for the Vault admin workspace."
+}
