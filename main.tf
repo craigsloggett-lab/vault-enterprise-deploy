@@ -60,9 +60,9 @@ module "vault" {
   vault_api_allowed_cidrs    = var.vault_api_allowed_cidrs
   vault_server_instance_type = var.vault_server_instance_type
 
-  #hcp_terraform = {
-  #  hostname          = var.hcp_terraform_hostname
-  #  organization_name = var.hcp_terraform_organization_name
-  #  workspace_id      = var.hcp_terraform_workspace_id
-  #}
+  hcp_terraform = {
+    hostname          = var.hcp_terraform_hostname
+    organization_name = var.hcp_terraform_organization_name
+    workspace_id      = var.hcp_terraform_workspace_id
+  }
 }
