@@ -42,7 +42,8 @@ data "aws_ami" "selected" {
 }
 
 module "vault" {
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v0.1.2"
+  # tflint-ignore: terraform_module_pinned_source
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=a647ec3c3d8bc6ad46dbcab4303d34359a5bad47"
 
   project_name             = var.project_name
   route53_zone             = data.aws_route53_zone.vault
