@@ -3,6 +3,11 @@ output "vault_url" {
   value       = module.vault.vault_url
 }
 
+output "vault_version" {
+  description = "Vault Enterprise version deployed."
+  value       = module.vault.vault_version
+}
+
 output "bastion_public_ip" {
   description = "Public IP of the bastion host."
   value       = module.vault.bastion_public_ip
