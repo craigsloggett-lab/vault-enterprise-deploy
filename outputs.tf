@@ -28,9 +28,9 @@ output "vault_snapshots_bucket" {
   value       = module.vault.vault_snapshots_bucket
 }
 
-output "vault_tls_ca_bundle_ssm_name" {
+output "vault_tls_ca_bundle_ssm_parameter_name" {
   description = "SSM Parameter for the Vault PKI managed TLS CA bundle."
-  value       = module.vault.vault_tls_ca_bundle_ssm_name
+  value       = module.vault.vault_tls_ca_bundle_ssm_parameter_name
 }
 
 output "vault_iam_role_name" {
