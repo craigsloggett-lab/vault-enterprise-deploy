@@ -6,7 +6,7 @@ COMMIT_MSG  ?= Validate recent module changes
 .PHONY: bump latest
 .PHONY: init validate fmt lint docs check
 .PHONY: stage commit push ship
-.PHONY: cycle
+.PHONY: cycle update
 
 help:
 	@echo "Development cycle targets (run in order):"
@@ -33,7 +33,7 @@ help:
 	@echo "Override: MODULE_REPO=<url>"
 
 bump:
-	@: $${BRANCH:?BRANCH is required, e.g. make update BRANCH=cool-new-feature}
+	@: $${BRANCH:?BRANCH is required, e.g. make bump BRANCH=cool-new-feature}
 	@SHA=$$(git ls-remote $(MODULE_REPO) refs/heads/$(BRANCH) | cut -f1); \
 	[ -n "$$SHA" ] || { echo "Error: Branch '$(BRANCH)' not found on $(MODULE_REPO)" >&2; exit 1; }; \
 	TMP=$$(mktemp -d)/main.tf; \
