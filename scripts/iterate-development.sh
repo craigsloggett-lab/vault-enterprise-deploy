@@ -57,6 +57,13 @@ delete_coordination_ssm_parameters() {
   aws ssm delete-parameters --names ${names} >/dev/null
 }
 
+remove_wait_for_csr_from_state() {
+  log "Removing terraform_data.wait_for_csr from state."
+  if terraform state list terraform_data.wait_for_csr >/dev/null 2>&1; then
+    terraform state rm terraform_data.wait_for_csr
+  fi
+}
+
 main() {
   set -ef
 
@@ -70,6 +77,7 @@ main() {
 
   wait_for_asg_empty
   delete_coordination_ssm_parameters
+  remove_wait_for_csr_from_state
 }
 
 main "$@"

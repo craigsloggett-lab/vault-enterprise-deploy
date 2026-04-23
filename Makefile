@@ -17,7 +17,7 @@ help:
 	@echo "  make ship                stage, commit, push"
 	@echo ""
 	@echo "Roll-ups:"
-	@echo "  make cycle BRANCH=<name> bump + check + iterate + ship"
+	@echo "  make cycle BRANCH=<name> bump + check + iterate + plan + ship"
 	@echo "  make update              latest + check + ship"
 	@echo ""
 	@echo "Individual steps:"
@@ -26,6 +26,7 @@ help:
 	@echo "  fmt       terraform fmt --recursive"
 	@echo "  lint      tflint --recursive --format=compact"
 	@echo "  docs      terraform-docs ."
+	@echo "  plan      terraform plan"
 	@echo "  stage     git add ."
 	@echo "  commit    git commit -m '\$$(COMMIT_MSG)'"
 	@echo "  push      git push"
@@ -71,6 +72,9 @@ lint:
 docs: init
 	terraform-docs .
 
+plan:
+	terraform plan
+
 check: init validate fmt lint docs
 
 stage:
@@ -88,11 +92,11 @@ iterate:
 	scripts/./iterate-development.sh
 
 cycle: COMMIT_MSG = Validate recent module changes
-cycle: bump check iterate ship
+cycle: bump check iterate plan ship
 	@echo ""
 	@echo "Deploy triggered."
 
 update: COMMIT_MSG = Bump the module version number
-update: latest check ship
+update: latest check plan ship
 	@echo ""
 	@echo "Deploy triggered."
