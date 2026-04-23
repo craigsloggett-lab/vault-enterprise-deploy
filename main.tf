@@ -42,7 +42,8 @@ data "aws_ami" "selected" {
 }
 
 module "vault" {
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v0.2.0"
+  # tflint-ignore: terraform_module_pinned_source
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=43a92762b0e924fef48d5dd3456875975b5205b9"
 
   project_name             = var.project_name
   route53_zone             = data.aws_route53_zone.vault
@@ -55,6 +56,8 @@ module "vault" {
     private_subnet_ids = data.aws_subnets.private.ids
     public_subnet_ids  = data.aws_subnets.public.ids
   }
+
+  intermediate_ca_secret_arn = aws_secretsmanager_secret.intermediate_ca.arn
 
   nlb_internal               = var.nlb_internal
   vault_api_allowed_cidrs    = var.vault_api_allowed_cidrs

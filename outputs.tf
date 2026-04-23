@@ -52,3 +52,13 @@ output "vault_jwt_auth_role_name" {
   description = "Vault JWT auth role name for HCP Terraform."
   value       = module.vault.vault_jwt_auth_role_name
 }
+
+output "intermediate_csr_ssm_parameter_name" {
+  description = "SSM parameter name where the intermediate CSR is published."
+  value       = module.vault.intermediate_csr_ssm_parameter_name
+}
+
+output "intermediate_ca_secret_arn" {
+  description = "Secrets Manager ARN for the signed intermediate CA certificate."
+  value       = module.vault.intermediate_ca_secret_arn
+}
