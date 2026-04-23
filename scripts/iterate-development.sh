@@ -43,26 +43,6 @@ read_terraform_outputs() {
   esac
 
   log "  ASG:" "${asg_name}"
-  # Resolve instance IDs from ASG, then private IPs from EC2.
-  instance_ids="$(aws autoscaling describe-auto-scaling-groups \
-    --auto-scaling-group-names "${asg_name}" \
-    --query "AutoScalingGroups[0].Instances[?LifecycleState=='InService'].InstanceId" \
-    --output text)"
-
-  if [ -z "${instance_ids}" ]; then
-    log "ERROR: No InService instances found in ASG:" "${asg_name}"
-    exit 1
-  fi
-
-  # shellcheck disable=SC2086
-  node_ips="$(aws ec2 describe-instances \
-    --instance-ids ${instance_ids} \
-    --query "Reservations[].Instances[].PrivateIpAddress" \
-    --output text | tr '\t' '\n')"
-
-  log "  Bastion IP:" "${bastion_ip}"
-  log "  Vault nodes:" "$(printf '%s\n' "${node_ips}" | tr '\n' ' ')"
-  log "  SSH user:" "${ssh_user}"
 }
 
 wait_for_asg_empty() {
@@ -108,7 +88,6 @@ main() {
 
   wait_for_asg_empty
   delete_coordination_ssm_parameters
-  reset_bootstrap_secrets
 
   log "Scaling ASG back up."
   aws autoscaling update-auto-scaling-group \
