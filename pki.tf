@@ -36,18 +36,26 @@ resource "tls_self_signed_cert" "root_ca" {
 
 # Intermediate CA Signing
 
-data "external" "intermediate_csr" {
-  program = ["${path.module}/files/wait-for-csr.sh"]
+resource "terraform_data" "wait_for_csr" {
+  input = module.vault.intermediate_csr_ssm_parameter_name
 
-  query = {
-    parameter_name = module.vault.intermediate_csr_ssm_parameter_name
-    timeout_sec    = "1800"
-    region         = data.aws_region.current.region
+  provisioner "local-exec" {
+    command = "${path.module}/files/wait-for-csr.sh"
+    environment = {
+      PARAMETER_NAME = self.input
+      TIMEOUT_SEC    = "1800"
+      REGION         = data.aws_region.current.region
+    }
   }
 }
 
+data "aws_ssm_parameter" "intermediate_csr" {
+  depends_on = [terraform_data.wait_for_csr]
+  name       = module.vault.intermediate_csr_ssm_parameter_name
+}
+
 resource "tls_locally_signed_cert" "intermediate_ca" {
-  cert_request_pem   = data.external.intermediate_csr.result.csr_pem
+  cert_request_pem   = data.aws_ssm_parameter.intermediate_csr.value
   ca_private_key_pem = tls_private_key.root_ca.private_key_pem
   ca_cert_pem        = tls_self_signed_cert.root_ca.cert_pem
 
