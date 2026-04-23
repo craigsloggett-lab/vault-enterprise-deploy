@@ -37,7 +37,7 @@ resource "tls_self_signed_cert" "root_ca" {
 # Intermediate CA Signing
 
 resource "terraform_data" "wait_for_csr" {
-  input = module.vault.intermediate_csr_ssm_parameter_name
+  input = module.vault.vault_pki_intermediate_ca_csr_ssm_parameter_name
 
   provisioner "local-exec" {
     command = "${path.module}/files/wait-for-csr.sh"
@@ -49,13 +49,13 @@ resource "terraform_data" "wait_for_csr" {
   }
 }
 
-data "aws_ssm_parameter" "intermediate_csr" {
+data "aws_ssm_parameter" "vault_pki_intermediate_ca_csr" {
   depends_on = [terraform_data.wait_for_csr]
-  name       = module.vault.intermediate_csr_ssm_parameter_name
+  name       = module.vault.vault_pki_intermediate_ca_csr_ssm_parameter_name
 }
 
 resource "tls_locally_signed_cert" "intermediate_ca" {
-  cert_request_pem   = data.aws_ssm_parameter.intermediate_csr.value
+  cert_request_pem   = data.aws_ssm_parameter.vault_pki_intermediate_ca_csr.value
   ca_private_key_pem = tls_private_key.root_ca.private_key_pem
   ca_cert_pem        = tls_self_signed_cert.root_ca.cert_pem
 

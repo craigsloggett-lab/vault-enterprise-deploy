@@ -53,9 +53,9 @@ output "vault_jwt_auth_role_name" {
   value       = module.vault.vault_jwt_auth_role_name
 }
 
-output "intermediate_csr_ssm_parameter_name" {
-  description = "SSM parameter name where the intermediate CSR is published."
-  value       = module.vault.intermediate_csr_ssm_parameter_name
+output "vault_pki_intermediate_ca_csr_ssm_parameter_name" {
+  description = "SSM parameter name where the intermediate CA CSR is published."
+  value       = module.vault.vault_pki_intermediate_ca_csr_ssm_parameter_name
 }
 
 output "intermediate_ca_secret_arn" {
