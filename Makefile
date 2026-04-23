@@ -4,7 +4,7 @@ COMMIT_MSG  ?= Validate recent module changes
 
 .PHONY: help
 .PHONY: bump latest
-.PHONY: init validate fmt lint docs check
+.PHONY: init validate fmt lint docs check plan
 .PHONY: stage commit push ship iterate
 .PHONY: cycle update
 
@@ -92,11 +92,11 @@ iterate:
 	scripts/./iterate-development.sh
 
 cycle: COMMIT_MSG = Validate recent module changes
-cycle: bump check iterate plan ship
+cycle: bump check iterate ship
 	@echo ""
 	@echo "Deploy triggered."
 
 update: COMMIT_MSG = Bump the module version number
-update: latest check plan ship
+update: latest check ship
 	@echo ""
 	@echo "Deploy triggered."
