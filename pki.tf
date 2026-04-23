@@ -50,8 +50,7 @@ resource "terraform_data" "wait_for_csr" {
 }
 
 data "aws_ssm_parameter" "vault_pki_intermediate_ca_csr" {
-  depends_on = [terraform_data.wait_for_csr]
-  name       = module.vault.vault_pki_intermediate_ca_csr_ssm_parameter_name
+  name = module.vault.vault_pki_intermediate_ca_csr_ssm_parameter_name
 }
 
 resource "tls_locally_signed_cert" "intermediate_ca" {
