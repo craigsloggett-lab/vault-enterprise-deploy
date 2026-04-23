@@ -1,16 +1,28 @@
+data "aws_region" "current" {}
+
+locals {
+  pki_key_type = "ec"
+  pki_key_bits = 384
+
+  tls_algorithm   = local.pki_key_type == "ec" ? "ECDSA" : "RSA"
+  tls_ecdsa_curve = local.pki_key_type == "ec" ? "P${local.pki_key_bits}" : null
+  tls_rsa_bits    = local.pki_key_type == "rsa" ? local.pki_key_bits : null
+}
+
 # Root CA
 
 resource "tls_private_key" "root_ca" {
-  algorithm   = "ECDSA"
-  ecdsa_curve = "P384"
+  algorithm   = local.tls_algorithm
+  ecdsa_curve = local.tls_ecdsa_curve
+  rsa_bits    = local.tls_rsa_bits
 }
 
 resource "tls_self_signed_cert" "root_ca" {
   private_key_pem = tls_private_key.root_ca.private_key_pem
 
   subject {
-    common_name  = "${var.project_name} Root CA"
-    organization = var.project_name
+    common_name  = "${title(var.project_name)} Root CA"
+    organization = "HashiDemos"
   }
 
   validity_period_hours = 87600
@@ -24,13 +36,18 @@ resource "tls_self_signed_cert" "root_ca" {
 
 # Intermediate CA Signing
 
-resource "aws_secretsmanager_secret" "intermediate_ca" {
-  name_prefix = "${var.project_name}-vault-intermediate-ca-"
-  description = "Signed intermediate CA certificate and chain for Vault PKI"
+data "external" "intermediate_csr" {
+  program = ["${path.module}/files/wait-for-csr.sh"]
+
+  query = {
+    parameter_name = module.vault.intermediate_csr_ssm_parameter_name
+    timeout_sec    = "1800"
+    region         = data.aws_region.current.region
+  }
 }
 
 resource "tls_locally_signed_cert" "intermediate_ca" {
-  cert_request_pem   = module.vault.intermediate_csr_pem
+  cert_request_pem   = data.external.intermediate_csr.result.csr_pem
   ca_private_key_pem = tls_private_key.root_ca.private_key_pem
   ca_cert_pem        = tls_self_signed_cert.root_ca.cert_pem
 
@@ -44,7 +61,7 @@ resource "tls_locally_signed_cert" "intermediate_ca" {
 }
 
 resource "aws_secretsmanager_secret_version" "intermediate_ca" {
-  secret_id = aws_secretsmanager_secret.intermediate_ca.id
+  secret_id = module.vault.intermediate_ca_secret_arn
   secret_string = jsonencode({
     certificate = tls_locally_signed_cert.intermediate_ca.cert_pem
     ca_chain    = tls_self_signed_cert.root_ca.cert_pem

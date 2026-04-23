@@ -10,5 +10,9 @@ terraform {
       source  = "hashicorp/tls"
       version = "4.1.0"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.4"
+    }
   }
 }
