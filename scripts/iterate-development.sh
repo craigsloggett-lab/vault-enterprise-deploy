@@ -1,5 +1,5 @@
 #!/bin/sh
-# Usage: ./check-journald.sh
+# Usage: ./iterate-development.sh
 
 log() {
   # Colors are automatically disabled if output is not a terminal
@@ -65,18 +65,55 @@ read_terraform_outputs() {
   log "  SSH user:" "${ssh_user}"
 }
 
+wait_for_asg_empty() {
+  log "Waiting for ASG to scale down."
+  while :; do
+    count="$(aws autoscaling describe-auto-scaling-groups \
+      --auto-scaling-group-names "${asg_name}" \
+      --query 'length(AutoScalingGroups[0].Instances)' \
+      --output text)"
+    [ "${count}" = "0" ] && break
+    sleep 10
+  done
+  log "  ASG is empty."
+}
+
+delete_coordination_ssm_parameters() {
+  log "Deleting coordination SSM parameters."
+
+  names="$(aws ssm describe-parameters \
+    --parameter-filters "Key=Name,Option=BeginsWith,Values=/lab/vault/" \
+    --query 'Parameters[].Name' --output text)"
+
+  if [ -z "${names}" ]; then
+    log "  Nothing to delete."
+    return 0
+  fi
+
+  log "  Deleting:" "$(printf '%s' "${names}" | tr '\t' ' ')"
+  # shellcheck disable=SC2086
+  aws ssm delete-parameters --names ${names} >/dev/null
+}
+
 main() {
   set -ef
 
   # Get host IPs
   read_terraform_outputs
 
-  aws ec2 terminate-instances --instance-ids "$(
-    aws autoscaling describe-auto-scaling-groups \
-      --auto-scaling-group-names "${asg_name}" \
-      'AutoScalingGroups[0].Instances[].InstanceId' \
-      --output text
-  )"
+  # Scale the ASG down to 0
+  aws autoscaling update-auto-scaling-group \
+    --auto-scaling-group-name "${asg_name}" \
+    --min-size 0 --desired-capacity 0
+
+  wait_for_asg_empty
+  delete_coordination_ssm_parameters
+  reset_bootstrap_secrets
+
+  log "Scaling ASG back up."
+  aws autoscaling update-auto-scaling-group \
+    --auto-scaling-group-name "${asg_name}" \
+    --min-size 3 --desired-capacity 3
 }
 
 main "$@"
