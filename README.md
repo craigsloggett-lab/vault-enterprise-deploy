@@ -71,7 +71,7 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 72a2678e260f0dcbd2af9876e2e0e5da896156d2 |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | aba6968307898848f8754d0a8daebd0e5d5c38c1 |
 
 ## Inputs
 
