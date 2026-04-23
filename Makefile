@@ -5,7 +5,7 @@ COMMIT_MSG  ?= Validate recent module changes
 .PHONY: help
 .PHONY: bump latest
 .PHONY: init validate fmt lint docs check
-.PHONY: stage commit push ship
+.PHONY: stage commit push ship iterate
 .PHONY: cycle update
 
 help:
@@ -17,7 +17,7 @@ help:
 	@echo "  make ship                stage, commit, push"
 	@echo ""
 	@echo "Roll-ups:"
-	@echo "  make cycle BRANCH=<name> bump + check + ship"
+	@echo "  make cycle BRANCH=<name> bump + check + iterate + ship"
 	@echo "  make update              latest + check + ship"
 	@echo ""
 	@echo "Individual steps:"
@@ -29,6 +29,7 @@ help:
 	@echo "  stage     git add ."
 	@echo "  commit    git commit -m '\$$(COMMIT_MSG)'"
 	@echo "  push      git push"
+	@echo "  iterate   scripts/./iterate-development.sh
 	@echo ""
 	@echo "Override: MODULE_REPO=<url>"
 
@@ -83,8 +84,11 @@ push:
 
 ship: commit push
 
+iterate:
+	scripts/./iterate-development.sh
+
 cycle: COMMIT_MSG = Validate recent module changes
-cycle: bump check ship
+cycle: bump check iterate ship
 	@echo ""
 	@echo "Deploy triggered."
 

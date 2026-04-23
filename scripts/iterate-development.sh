@@ -20,28 +20,10 @@ read_terraform_outputs() {
   cd "$(dirname "$0")/.."
 
   terraform_output="$(terraform output -json)"
-  bastion_ip="$(
-    printf '%s\n' "${terraform_output}" |
-      jq -r '.bastion_public_ip.value'
-  )"
   asg_name="$(
     printf '%s\n' "${terraform_output}" |
       jq -r '.vault_asg_name.value'
   )"
-  ami_name="$(
-    printf '%s\n' "${terraform_output}" |
-      jq -r '.ec2_ami_name.value'
-  )"
-
-  case "${ami_name}" in
-    *ubuntu*) ssh_user="ubuntu" ;;
-    *debian*) ssh_user="admin" ;;
-    *)
-      log "ERROR: Unsupported AMI:" "${ami_name}"
-      exit 1
-      ;;
-  esac
-
   log "  ASG:" "${asg_name}"
 }
 
@@ -88,11 +70,6 @@ main() {
 
   wait_for_asg_empty
   delete_coordination_ssm_parameters
-
-  log "Scaling ASG back up."
-  aws autoscaling update-auto-scaling-group \
-    --auto-scaling-group-name "${asg_name}" \
-    --min-size 3 --desired-capacity 3
 }
 
 main "$@"
