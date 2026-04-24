@@ -55,9 +55,18 @@ scale_asg_to_zero() {
       tr '\t' '\n'
   )"
 
-  # shellcheck disable=SC2086
-  # Nuke them to speed up the scale down
-  [ -n "${ids}" ] && aws ec2 terminate-instances --instance-ids ${ids}
+  if [ -n "${ids}" ]; then
+    # shellcheck disable=SC2086
+    # Detach from ASG — this drops them from Instances[] immediately
+    aws autoscaling detach-instances \
+      --auto-scaling-group-name "${asg_name}" \
+      --instance-ids ${ids} \
+      --should-decrement-desired-capacity
+
+    # shellcheck disable=SC2086
+    # Now kill them at the EC2 layer
+    aws ec2 terminate-instances --instance-ids ${ids}
+  fi
 }
 
 wait_for_asg_to_be_empty() {
