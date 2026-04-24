@@ -95,6 +95,18 @@ main() {
     --auto-scaling-group-name "${asg_name}" \
     --min-size 0 --desired-capacity 0
 
+  # Grab the current instance IDs
+  ids="$(
+    aws autoscaling describe-auto-scaling-groups \
+      --auto-scaling-group-names "${asg_name}" \
+      --query 'AutoScalingGroups[0].Instances[*].InstanceId' \
+      --output text |
+      tr '\t' '\n'
+  )"
+
+  # Nuke them to speed up the scale down
+  [ -n "${ids}" ] && aws ec2 terminate-instances --instance-ids $ids
+
   wait_for_asg_empty
   delete_coordination_ssm_parameters
   delete_signed_intermediate_secret
