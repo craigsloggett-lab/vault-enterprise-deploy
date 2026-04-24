@@ -104,8 +104,9 @@ main() {
       tr '\t' '\n'
   )"
 
+  # shellcheck disable=SC2086
   # Nuke them to speed up the scale down
-  [ -n "${ids}" ] && aws ec2 terminate-instances --instance-ids $ids
+  [ -n "${ids}" ] && aws ec2 terminate-instances --instance-ids ${ids}
 
   wait_for_asg_empty
   delete_coordination_ssm_parameters
