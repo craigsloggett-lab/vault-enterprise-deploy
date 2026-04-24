@@ -1,7 +1,7 @@
 data "aws_region" "current" {}
 
 locals {
-  vault_pki_intermediate_ca_common_name  = "title(${var.project_name}) Vault Intermediate CA"
+  vault_pki_intermediate_ca_common_name  = "${title(var.project_name)} Vault Intermediate CA"
   vault_pki_intermediate_ca_country      = "US"
   vault_pki_intermediate_ca_organization = "HashiCorp Demos"
   vault_pki_intermediate_ca_key_type     = "ec"
