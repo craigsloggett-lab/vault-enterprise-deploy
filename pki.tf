@@ -1,20 +1,23 @@
 data "aws_region" "current" {}
 
 locals {
-  pki_key_type = "ec"
-  pki_key_bits = 384
+  vault_pki_intermediate_ca_common_name  = "title(${var.project_name}) Vault Intermediate CA"
+  vault_pki_intermediate_ca_country      = "US"
+  vault_pki_intermediate_ca_organization = "HashiCorp Demos"
+  vault_pki_intermediate_ca_key_type     = "ec"
+  vault_pki_intermediate_ca_key_bits     = 384
 
-  tls_algorithm   = local.pki_key_type == "ec" ? "ECDSA" : "RSA"
-  tls_ecdsa_curve = local.pki_key_type == "ec" ? "P${local.pki_key_bits}" : null
-  tls_rsa_bits    = local.pki_key_type == "rsa" ? local.pki_key_bits : null
+  root_ca_tls_algorithm   = local.vault_pki_intermediate_ca_key_type == "ec" ? "ECDSA" : "RSA"
+  root_ca_tls_ecdsa_curve = local.vault_pki_intermediate_ca_key_type == "ec" ? "P${local.vault_pki_intermediate_ca_key_bits}" : null
+  root_ca_tls_rsa_bits    = local.vault_pki_intermediate_ca_key_type == "rsa" ? local.vault_pki_intermediate_ca_key_bits : null
 }
 
 # Root CA
 
 resource "tls_private_key" "root_ca" {
-  algorithm   = local.tls_algorithm
-  ecdsa_curve = local.tls_ecdsa_curve
-  rsa_bits    = local.tls_rsa_bits
+  algorithm   = local.root_ca_tls_algorithm
+  ecdsa_curve = local.root_ca_tls_ecdsa_curve
+  rsa_bits    = local.root_ca_tls_rsa_bits
 }
 
 resource "tls_self_signed_cert" "root_ca" {

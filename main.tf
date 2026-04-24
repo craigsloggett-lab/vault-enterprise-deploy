@@ -43,7 +43,7 @@ data "aws_ami" "selected" {
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=fe5f980a6aad31359901e47e1b1181671f7c492a"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=6ad260af87f191c10102e67a9b5e283f945c630b"
 
   project_name             = var.project_name
   route53_zone             = data.aws_route53_zone.vault
@@ -58,8 +58,11 @@ module "vault" {
   }
 
   vault_pki_intermediate_ca = {
-    key_type = local.pki_key_type
-    key_bits = local.pki_key_bits
+    common_name  = local.vault_pki_intermediate_ca_common_name
+    country      = local.vault_pki_intermediate_ca_country
+    organization = local.vault_pki_intermediate_ca_organization
+    key_type     = local.vault_pki_intermediate_ca_key_type
+    key_bits     = local.vault_pki_intermediate_ca_key_bits
   }
 
   nlb_internal               = var.nlb_internal
