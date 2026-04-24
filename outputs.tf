@@ -58,7 +58,7 @@ output "vault_pki_intermediate_ca_csr_ssm_parameter_name" {
   value       = module.vault.vault_pki_intermediate_ca_csr_ssm_parameter_name
 }
 
-output "intermediate_ca_secret_arn" {
+output "vault_pki_intermediate_ca_signed_csr_secret_arn" {
   description = "Secrets Manager ARN for the signed intermediate CA certificate."
-  value       = module.vault.intermediate_ca_secret_arn
+  value       = module.vault.vault_pki_intermediate_ca_signed_csr_secret_arn
 }

@@ -57,6 +57,26 @@ delete_coordination_ssm_parameters() {
   aws ssm delete-parameters --names ${names} >/dev/null
 }
 
+delete_signed_intermediate_secret() {
+  log "Deleting signed intermediate CA secret."
+
+  secret_arn="$(
+    printf '%s\n' "${terraform_output}" |
+      jq -r '.vault_pki_intermediate_ca_signed_csr_secret_arn.value // empty'
+  )"
+
+  if [ -z "${secret_arn}" ]; then
+    log "  No secret ARN found in outputs."
+    return 0
+  fi
+
+  aws secretsmanager delete-secret \
+    --secret-id "${secret_arn}" \
+    --force-delete-without-recovery >/dev/null 2>&1 || true
+
+  log "  Deleted:" "${secret_arn}"
+}
+
 remove_wait_for_csr_from_state() {
   log "Removing terraform_data.wait_for_csr from state."
   if terraform state list terraform_data.wait_for_csr >/dev/null 2>&1; then
@@ -77,6 +97,7 @@ main() {
 
   wait_for_asg_empty
   delete_coordination_ssm_parameters
+  delete_signed_intermediate_secret
   remove_wait_for_csr_from_state
 }
 
