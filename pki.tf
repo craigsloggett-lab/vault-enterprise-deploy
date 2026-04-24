@@ -25,7 +25,8 @@ resource "tls_self_signed_cert" "root_ca" {
 
   subject {
     common_name  = "${title(var.project_name)} Root CA"
-    organization = "HashiDemos"
+    country      = local.vault_pki_intermediate_ca_country
+    organization = local.vault_pki_intermediate_ca_organization
   }
 
   validity_period_hours = 87600

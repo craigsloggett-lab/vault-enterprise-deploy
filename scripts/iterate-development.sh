@@ -27,7 +27,40 @@ read_terraform_outputs() {
   log "  ASG:" "${asg_name}"
 }
 
-wait_for_asg_empty() {
+zero_out_tg_deregistration_delay() {
+  tg_arn="$(
+    aws autoscaling describe-load-balancer-target-groups \
+      --auto-scaling-group-name "${asg_name}" \
+      --query 'LoadBalancerTargetGroups[*].LoadBalancerTargetGroupARN' \
+      --output text
+  )"
+
+  aws elbv2 modify-target-group-attributes \
+    --target-group-arn "${tg_arn}" \
+    --attributes Key=deregistration_delay.timeout_seconds,Value=0
+}
+
+scale_asg_to_zero() {
+  # Scale the ASG down to 0
+  aws autoscaling update-auto-scaling-group \
+    --auto-scaling-group-name "${asg_name}" \
+    --min-size 0 --desired-capacity 0
+
+  # Grab the current instance IDs
+  ids="$(
+    aws autoscaling describe-auto-scaling-groups \
+      --auto-scaling-group-names "${asg_name}" \
+      --query 'AutoScalingGroups[0].Instances[*].InstanceId' \
+      --output text |
+      tr '\t' '\n'
+  )"
+
+  # shellcheck disable=SC2086
+  # Nuke them to speed up the scale down
+  [ -n "${ids}" ] && aws ec2 terminate-instances --instance-ids ${ids}
+}
+
+wait_for_asg_to_be_empty() {
   log "Waiting for ASG to scale down."
   while :; do
     count="$(aws autoscaling describe-auto-scaling-groups \
@@ -90,25 +123,10 @@ main() {
   # Get host IPs
   read_terraform_outputs
 
-  # Scale the ASG down to 0
-  aws autoscaling update-auto-scaling-group \
-    --auto-scaling-group-name "${asg_name}" \
-    --min-size 0 --desired-capacity 0
+  zero_out_tg_deregistration_delay
+  scale_asg_to_zero
+  wait_for_asg_to_be_empty
 
-  # Grab the current instance IDs
-  ids="$(
-    aws autoscaling describe-auto-scaling-groups \
-      --auto-scaling-group-names "${asg_name}" \
-      --query 'AutoScalingGroups[0].Instances[*].InstanceId' \
-      --output text |
-      tr '\t' '\n'
-  )"
-
-  # shellcheck disable=SC2086
-  # Nuke them to speed up the scale down
-  [ -n "${ids}" ] && aws ec2 terminate-instances --instance-ids ${ids}
-
-  wait_for_asg_empty
   delete_coordination_ssm_parameters
   delete_signed_intermediate_secret
   remove_wait_for_csr_from_state
