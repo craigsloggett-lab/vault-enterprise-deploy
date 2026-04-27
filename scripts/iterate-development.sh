@@ -37,14 +37,14 @@ zero_out_tg_deregistration_delay() {
 
   aws elbv2 modify-target-group-attributes \
     --target-group-arn "${tg_arn}" \
-    --attributes Key=deregistration_delay.timeout_seconds,Value=0
+    --attributes Key=deregistration_delay.timeout_seconds,Value=0 >/dev/null
 }
 
 scale_asg_to_zero() {
   # Scale the ASG down to 0
   aws autoscaling update-auto-scaling-group \
     --auto-scaling-group-name "${asg_name}" \
-    --min-size 0 --desired-capacity 0
+    --min-size 0 --desired-capacity 0 >/dev/null
 
   # Grab the current instance IDs
   ids="$(
@@ -61,11 +61,11 @@ scale_asg_to_zero() {
     aws autoscaling detach-instances \
       --auto-scaling-group-name "${asg_name}" \
       --instance-ids ${ids} \
-      --should-decrement-desired-capacity
+      --should-decrement-desired-capacity >/dev/null
 
     # shellcheck disable=SC2086
     # Now kill them at the EC2 layer
-    aws ec2 terminate-instances --instance-ids ${ids}
+    aws ec2 terminate-instances --instance-ids ${ids} >/dev/null
   fi
 }
 
