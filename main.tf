@@ -45,7 +45,7 @@ data "aws_ami" "selected" {
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=a3abfbc24e6d17ef87b0f86d6d94066bf6f7e60f"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=36ff8585eefa5c77ed0853691598e48c33d19866"
 
   project_name             = var.project_name
   route53_zone             = data.aws_route53_zone.vault
@@ -61,6 +61,18 @@ module "vault" {
 
   vault_cluster_auto_join_tag = {
     value = "${var.project_name}-${data.aws_region.this.region}"
+  }
+
+  vault_aws_resource_names = {
+    bastion_instance_name             = "${var.project_name}-vault-enterprise-bastion-host"
+    vault_kms_key_name                = "${var.project_name}-vault-enterprise-auto-unseal-key"
+    secretsmanager_vpc_endpoint_name  = "${var.project_name}-vault-enterprise-secretsmanager-vpc-endpoint"
+    kms_vpc_endpoint_name             = "${var.project_name}-vault-enterprise-kms-vpc-endpoint"
+    ec2_vpc_endpoint_name             = "${var.project_name}-vault-enterprise-ec2-vpc-endpoint"
+    s3_vpc_endpoint_name              = "${var.project_name}-vault-enterprise-s3-vpc-endpoint"
+    bastion_security_group_name       = "${var.project_name}-vault-enterprise-bastion-security-group"
+    vault_security_group_name         = "${var.project_name}-vault-enterprise-security-group"
+    vpc_endpoints_security_group_name = "${var.project_name}-vault-enterprise-vpc-endpoints-security-group"
   }
 
   vault_pki_intermediate_ca = {
