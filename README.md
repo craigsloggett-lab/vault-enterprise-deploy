@@ -70,7 +70,7 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | b800e287fd6f0a56f35a669e0c9fe7cdd72f8793 |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 73a12c1351a476e27a50bc1f07fc53f350530b17 |
 
 ## Inputs
 
@@ -100,6 +100,7 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 | [tls_self_signed_cert.root_ca](https://registry.terraform.io/providers/hashicorp/tls/4.2.1/docs/resources/self_signed_cert) | resource |
 | [aws_ami.selected](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/ami) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/region) | data source |
+| [aws_region.this](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/region) | data source |
 | [aws_route53_zone.vault](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/route53_zone) | data source |
 | [aws_ssm_parameter.vault_pki_intermediate_ca_csr](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/ssm_parameter) | data source |
 | [aws_subnets.private](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/subnets) | data source |
