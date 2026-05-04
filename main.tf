@@ -63,6 +63,15 @@ module "vault" {
     value = "${var.project_name}-${data.aws_region.this.region}"
   }
 
+  iam_role = {
+    name = "VaultEnterpriseServerRole"
+  }
+
+  iam_instance_profile = {
+    name = "VaultEnterpriseServerInstanceProfile"
+    path = "/"
+  }
+
   vault_aws_resource_names = {
     bastion_instance_name             = "${var.project_name}-vault-enterprise-bastion-host"
     vault_server_instance_name        = "${var.project_name}-vault-enterprise-server"
