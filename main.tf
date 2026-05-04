@@ -43,23 +43,57 @@ data "aws_ami" "selected" {
   }
 }
 
+data "aws_key_pair" "selected" {
+  key_name = var.ec2_key_pair_name
+}
+
 module "vault" {
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v0.3.11"
+  # tflint-ignore: terraform_module_pinned_source
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=840e0038f7d07ebfb1d3b1f450ea79f6b9ff6ebb"
 
   project_name             = var.project_name
   route53_zone             = data.aws_route53_zone.vault
   vault_enterprise_license = var.vault_enterprise_license
-  ec2_key_pair_name        = var.ec2_key_pair_name
-  ec2_ami                  = data.aws_ami.selected
+  key_pair                 = data.aws_key_pair.selected
+  ami                      = data.aws_ami.selected
 
-  existing_vpc = {
-    vpc_id             = data.aws_vpc.selected.id
-    private_subnet_ids = data.aws_subnets.private.ids
-    public_subnet_ids  = data.aws_subnets.public.ids
+  vpc = {
+    name = "${var.project_name}-vault-enterprise-vpc"
+    existing = {
+      vpc_id             = data.aws_vpc.selected.id
+      private_subnet_ids = data.aws_subnets.private.ids
+      public_subnet_ids  = data.aws_subnets.public.ids
+    }
   }
 
-  vault_cluster_auto_join_tag = {
-    value = "${var.project_name}-${data.aws_region.this.region}"
+  vpc_endpoints = {
+    secretsmanager_name = "${var.project_name}-vault-enterprise-secretsmanager-vpc-endpoint"
+    kms_name            = "${var.project_name}-vault-enterprise-kms-vpc-endpoint"
+    ec2_name            = "${var.project_name}-vault-enterprise-ec2-vpc-endpoint"
+    s3_name             = "${var.project_name}-vault-enterprise-s3-vpc-endpoint"
+  }
+
+  security_groups = {
+    bastion_name_prefix       = "${var.project_name}-vault-enterprise-bastion-sg-"
+    vault_servers_name_prefix = "${var.project_name}-vault-enterprise-servers-sg-"
+    vpc_endpoints_name_prefix = "${var.project_name}-vault-enterprise-vpc-endpoints-sg-"
+  }
+
+  bastion = {
+    name = "${var.project_name}-vault-enterprise-bastion-host"
+  }
+
+  kms_key = {
+    name = "${var.project_name}-vault-enterprise-auto-unseal-key"
+  }
+
+  vault_enterprise_servers = {
+    instance_name = "${var.project_name}-vault-enterprise-server"
+    volume_name   = "${var.project_name}-vault-enterprise-server-volume"
+    instance_type = var.vault_server_instance_type
+    cluster_auto_join_tag = {
+      value = "${var.project_name}-${data.aws_region.this.region}"
+    }
   }
 
   iam_role = {
@@ -71,31 +105,20 @@ module "vault" {
     path = "/"
   }
 
-  vault_aws_resource_names = {
-    bastion_instance_name             = "${var.project_name}-vault-enterprise-bastion-host"
-    vault_server_instance_name        = "${var.project_name}-vault-enterprise-server"
-    vault_server_volume_name          = "${var.project_name}-vault-enterprise-server-volume"
-    vault_kms_key_name                = "${var.project_name}-vault-enterprise-auto-unseal-key"
-    secretsmanager_vpc_endpoint_name  = "${var.project_name}-vault-enterprise-secretsmanager-vpc-endpoint"
-    kms_vpc_endpoint_name             = "${var.project_name}-vault-enterprise-kms-vpc-endpoint"
-    ec2_vpc_endpoint_name             = "${var.project_name}-vault-enterprise-ec2-vpc-endpoint"
-    s3_vpc_endpoint_name              = "${var.project_name}-vault-enterprise-s3-vpc-endpoint"
-    bastion_security_group_name       = "${var.project_name}-vault-enterprise-bastion-security-group"
-    vault_servers_security_group_name = "${var.project_name}-vault-enterprise-servers-security-group"
-    vpc_endpoints_security_group_name = "${var.project_name}-vault-enterprise-vpc-endpoints-security-group"
+  vault_pki = {
+    intermediate_ca = {
+      common_name  = local.vault_pki_intermediate_ca_common_name
+      country      = local.vault_pki_intermediate_ca_country
+      organization = local.vault_pki_intermediate_ca_organization
+      key_type     = local.vault_pki_intermediate_ca_key_type
+      key_bits     = local.vault_pki_intermediate_ca_key_bits
+    }
   }
 
-  vault_pki_intermediate_ca = {
-    common_name  = local.vault_pki_intermediate_ca_common_name
-    country      = local.vault_pki_intermediate_ca_country
-    organization = local.vault_pki_intermediate_ca_organization
-    key_type     = local.vault_pki_intermediate_ca_key_type
-    key_bits     = local.vault_pki_intermediate_ca_key_bits
+  nlb = {
+    internal          = var.nlb_internal
+    api_allowed_cidrs = var.vault_api_allowed_cidrs
   }
-
-  nlb_internal               = var.nlb_internal
-  vault_api_allowed_cidrs    = var.vault_api_allowed_cidrs
-  vault_server_instance_type = var.vault_server_instance_type
 
   hcp_terraform_jwt_auth = {
     hostname          = var.hcp_terraform_hostname
