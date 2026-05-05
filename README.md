@@ -70,7 +70,7 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | f5ba49363f56f171bf0621358eaaa03772fc68ec |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 10e675edf38a72b16682ac6616ec605e24caad75 |
 
 ## Inputs
 
@@ -82,7 +82,6 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 | <a name="input_hcp_terraform_hostname"></a> [hcp\_terraform\_hostname](#input\_hcp\_terraform\_hostname) | HCP Terraform hostname name used to scope the JWT auth role for the Vault admin workspace. | `string` | `"app.terraform.io"` | no |
 | <a name="input_hcp_terraform_organization_name"></a> [hcp\_terraform\_organization\_name](#input\_hcp\_terraform\_organization\_name) | HCP Terraform organization name used to scope the JWT auth role for the Vault admin workspace. | `string` | `"craigsloggett-lab"` | no |
 | <a name="input_nlb_internal"></a> [nlb\_internal](#input\_nlb\_internal) | Whether the NLB is internal. | `bool` | `true` | no |
-| <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name prefix for all resources. | `string` | n/a | yes |
 | <a name="input_route53_zone_name"></a> [route53\_zone\_name](#input\_route53\_zone\_name) | Name of the existing Route 53 hosted zone. | `string` | n/a | yes |
 | <a name="input_vault_api_allowed_cidrs"></a> [vault\_api\_allowed\_cidrs](#input\_vault\_api\_allowed\_cidrs) | CIDR blocks allowed to reach the Vault API (port 8200) from outside the VPC. Only effective when nlb\_internal is false. | `list(string)` | `[]` | no |
 | <a name="input_vault_enterprise_license"></a> [vault\_enterprise\_license](#input\_vault\_enterprise\_license) | Vault Enterprise license string. | `string` | n/a | yes |
@@ -100,7 +99,6 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 | [tls_self_signed_cert.root_ca](https://registry.terraform.io/providers/hashicorp/tls/4.2.1/docs/resources/self_signed_cert) | resource |
 | [aws_ami.selected](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/ami) | data source |
 | [aws_key_pair.selected](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/key_pair) | data source |
-| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/region) | data source |
 | [aws_region.this](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/region) | data source |
 | [aws_route53_zone.vault](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/route53_zone) | data source |
 | [aws_ssm_parameter.vault_pki_intermediate_ca_csr](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/ssm_parameter) | data source |

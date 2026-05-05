@@ -1,8 +1,3 @@
-variable "project_name" {
-  type        = string
-  description = "Name prefix for all resources."
-}
-
 variable "vpc_name" {
   type        = string
   description = "Name tag of the existing VPC."
