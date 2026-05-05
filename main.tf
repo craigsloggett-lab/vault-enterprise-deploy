@@ -53,7 +53,7 @@ data "aws_key_pair" "selected" {
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=9acdcceae57f84fc46e74e25bcb6527e0491c605"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=9795cfee81cd1071801f843a625abf09e9ce21df"
 
   vault_enterprise_license = var.vault_enterprise_license
 
