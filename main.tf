@@ -1,9 +1,13 @@
 data "aws_region" "this" {}
 
+locals {
+  existing_vpc_name = "hashistack"
+}
+
 data "aws_vpc" "selected" {
   filter {
     name   = "tag:Name"
-    values = [var.vpc_name]
+    values = [local.existing_vpc_name]
   }
 }
 
@@ -14,7 +18,7 @@ data "aws_subnets" "private" {
   }
   filter {
     name   = "tag:Name"
-    values = ["${var.vpc_name}-private-*"]
+    values = ["${local.existing_vpc_name}-private-*"]
   }
 }
 
@@ -25,31 +29,31 @@ data "aws_subnets" "public" {
   }
   filter {
     name   = "tag:Name"
-    values = ["${var.vpc_name}-public-*"]
+    values = ["${local.existing_vpc_name}-public-*"]
   }
 }
 
 data "aws_route53_zone" "vault" {
-  name = var.route53_zone_name
+  name = "craig-sloggett.sbx.hashidemos.io"
 }
 
 data "aws_ami" "selected" {
   most_recent = true
-  owners      = [var.ec2_ami_owner]
+  owners      = [var.ami_owner]
 
   filter {
     name   = "name"
-    values = [var.ec2_ami_name]
+    values = [var.ami_name]
   }
 }
 
 data "aws_key_pair" "selected" {
-  key_name = var.ec2_key_pair_name
+  key_name = var.key_pair_key_name
 }
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=10e675edf38a72b16682ac6616ec605e24caad75"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=9acdcceae57f84fc46e74e25bcb6527e0491c605"
 
   vault_enterprise_license = var.vault_enterprise_license
 
@@ -58,7 +62,6 @@ module "vault" {
   ami          = data.aws_ami.selected
 
   vpc = {
-    name = "vault-enterprise-vpc"
     existing = {
       vpc_id             = data.aws_vpc.selected.id
       private_subnet_ids = data.aws_subnets.private.ids
@@ -66,53 +69,13 @@ module "vault" {
     }
   }
 
-  vpc_endpoints = {
-    secretsmanager_name = "vault-enterprise-secretsmanager-vpc-endpoint"
-    kms_name            = "vault-enterprise-kms-vpc-endpoint"
-    ec2_name            = "vault-enterprise-ec2-vpc-endpoint"
-    s3_name             = "vault-enterprise-s3-vpc-endpoint"
-  }
-
-  security_group = {
-    bastion_name_prefix       = "vault-enterprise-bastion-sg-"
-    vault_servers_name_prefix = "vault-enterprise-servers-sg-"
-    vpc_endpoints_name_prefix = "vault-enterprise-vpc-endpoints-sg-"
-  }
-
-  bastion = {
-    name = "vault-enterprise-bastion-host"
-  }
-
-  kms_key = {
-    name = "vault-enterprise-auto-unseal-key"
-  }
-
   vault_cluster = {
-    instance_type = var.vault_server_instance_type
-    node_count    = 5
+    instance_type = "t3.medium"
+    node_count    = 3
 
     cluster_auto_join_tag = {
       value = data.aws_region.this.region
     }
-
-    launch_template = {
-      name_prefix = "vault-enterprise-"
-      volume_name = "vault-enterprise-volume"
-    }
-
-    autoscaling_group = {
-      name_prefix   = "vault-enterprise-"
-      instance_name = "vault-enterprise"
-    }
-  }
-
-  iam_role = {
-    name = "VaultEnterpriseServerRole"
-  }
-
-  iam_instance_profile = {
-    name = "VaultEnterpriseServerInstanceProfile"
-    path = "/"
   }
 
   vault_pki = {
@@ -126,13 +89,13 @@ module "vault" {
   }
 
   nlb = {
-    internal          = var.nlb_internal
-    api_allowed_cidrs = var.vault_api_allowed_cidrs
+    internal          = true
+    api_allowed_cidrs = ["0.0.0.0/0"]
   }
 
   hcp_terraform_jwt_auth = {
-    hostname          = var.hcp_terraform_hostname
-    organization_name = var.hcp_terraform_organization_name
+    hostname          = "app.terraform.io"
+    organization_name = "craigsloggett-lab"
   }
 }
 
