@@ -49,7 +49,7 @@ data "aws_key_pair" "selected" {
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=840e0038f7d07ebfb1d3b1f450ea79f6b9ff6ebb"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=f5ba49363f56f171bf0621358eaaa03772fc68ec"
 
   project_name             = var.project_name
   route53_zone             = data.aws_route53_zone.vault
@@ -73,7 +73,7 @@ module "vault" {
     s3_name             = "${var.project_name}-vault-enterprise-s3-vpc-endpoint"
   }
 
-  security_groups = {
+  security_group = {
     bastion_name_prefix       = "${var.project_name}-vault-enterprise-bastion-sg-"
     vault_servers_name_prefix = "${var.project_name}-vault-enterprise-servers-sg-"
     vpc_endpoints_name_prefix = "${var.project_name}-vault-enterprise-vpc-endpoints-sg-"
@@ -87,7 +87,7 @@ module "vault" {
     name = "${var.project_name}-vault-enterprise-auto-unseal-key"
   }
 
-  vault_enterprise_servers = {
+  vault_cluster = {
     instance_name = "${var.project_name}-vault-enterprise-server"
     volume_name   = "${var.project_name}-vault-enterprise-server-volume"
     instance_type = var.vault_server_instance_type

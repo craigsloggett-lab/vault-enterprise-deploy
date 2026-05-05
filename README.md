@@ -70,7 +70,7 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 840e0038f7d07ebfb1d3b1f450ea79f6b9ff6ebb |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | f5ba49363f56f171bf0621358eaaa03772fc68ec |
 
 ## Inputs
 
@@ -93,9 +93,9 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 
 | Name | Type |
 | ---- | ---- |
-| [aws_secretsmanager_secret_version.vault_pki_intermediate_ca_signed_csr](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/resources/secretsmanager_secret_version) | resource |
+| [aws_secretsmanager_secret_version.vault_pki_signed_intermediate_ca](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/resources/secretsmanager_secret_version) | resource |
 | [terraform_data.wait_for_csr](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
-| [tls_locally_signed_cert.vault_pki_intermediate_ca_signed_csr](https://registry.terraform.io/providers/hashicorp/tls/4.2.1/docs/resources/locally_signed_cert) | resource |
+| [tls_locally_signed_cert.vault_pki_signed_intermediate_ca](https://registry.terraform.io/providers/hashicorp/tls/4.2.1/docs/resources/locally_signed_cert) | resource |
 | [tls_private_key.root_ca](https://registry.terraform.io/providers/hashicorp/tls/4.2.1/docs/resources/private_key) | resource |
 | [tls_self_signed_cert.root_ca](https://registry.terraform.io/providers/hashicorp/tls/4.2.1/docs/resources/self_signed_cert) | resource |
 | [aws_ami.selected](https://registry.terraform.io/providers/hashicorp/aws/6.42.0/docs/data-sources/ami) | data source |
@@ -119,7 +119,7 @@ The local script strips the `-linux-amd64` suffix automatically when registering
 | <a name="output_vault_jwt_auth_path"></a> [vault\_jwt\_auth\_path](#output\_vault\_jwt\_auth\_path) | Vault JWT auth method path for HCP Terraform. |
 | <a name="output_vault_jwt_auth_role_name"></a> [vault\_jwt\_auth\_role\_name](#output\_vault\_jwt\_auth\_role\_name) | Vault JWT auth role name for HCP Terraform. |
 | <a name="output_vault_pki_intermediate_ca_csr_ssm_parameter_name"></a> [vault\_pki\_intermediate\_ca\_csr\_ssm\_parameter\_name](#output\_vault\_pki\_intermediate\_ca\_csr\_ssm\_parameter\_name) | SSM parameter name where the intermediate CA CSR is published. |
-| <a name="output_vault_pki_intermediate_ca_signed_csr_secret_arn"></a> [vault\_pki\_intermediate\_ca\_signed\_csr\_secret\_arn](#output\_vault\_pki\_intermediate\_ca\_signed\_csr\_secret\_arn) | Secrets Manager ARN for the signed intermediate CA certificate. |
+| <a name="output_vault_pki_signed_intermediate_ca_secret_arn"></a> [vault\_pki\_signed\_intermediate\_ca\_secret\_arn](#output\_vault\_pki\_signed\_intermediate\_ca\_secret\_arn) | Secrets Manager ARN for the signed intermediate CA certificate. |
 | <a name="output_vault_snapshots_bucket"></a> [vault\_snapshots\_bucket](#output\_vault\_snapshots\_bucket) | S3 bucket for Vault snapshots. |
 | <a name="output_vault_target_group_arn"></a> [vault\_target\_group\_arn](#output\_vault\_target\_group\_arn) | ARN of the Vault NLB target group. |
 | <a name="output_vault_tls_ca_bundle_ssm_parameter_name"></a> [vault\_tls\_ca\_bundle\_ssm\_parameter\_name](#output\_vault\_tls\_ca\_bundle\_ssm\_parameter\_name) | SSM Parameter for the Vault PKI managed TLS CA bundle. |
