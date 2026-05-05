@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Lint YAML Files
-        uses: craigsloggett/lint-yaml@7bb419d1e6e00fa57c5a15c4ed68ab22a2211d4e # v1.0.14
+        uses: craigsloggett/lint-yaml@769f7e321269ee28746b0281693fc0715b1db791 # v1.0.16
 
   terraform:
     name: Terraform
@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Lint Terraform Configuration
-        uses: craigsloggett/lint-terraform@4259f844b04cf95ede641b0b6cb1ba06daf71b73 # v1.1.4
+        uses: craigsloggett/lint-terraform@992f821c7c8686fb4319db6f8798021deb07c1db # v1.1.5
 
   terraform-docs:
     name: Terraform Docs
@@ -44,4 +44,4 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Lint Terraform Module Documentation
-        uses: craigsloggett/lint-terraform-docs@ba4763802eca6237bac648ec92c0444e10df689c # v1.0.17
+        uses: craigsloggett/lint-terraform-docs@75eb8192038e00bec01fc5f87e8821f857ddfed5 # v1.0.19
