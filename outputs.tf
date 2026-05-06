@@ -71,4 +71,5 @@ output "hcp_terraform_vault_auth_run_role" {
 output "hcp_terraform_vault_encoded_cacert" {
   description = "Vault JWT auth Base64-encoded CA certificate PEM for HCP Terraform (TFC_VAULT_ENCODED_CACERT)."
   value       = base64encode(data.aws_ssm_parameter.vault_pki_intermediate_ca.value)
+  sensitive   = true
 }
