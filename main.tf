@@ -54,7 +54,7 @@ data "aws_ssm_parameter" "vault_pki_intermediate_ca" {
 }
 
 module "vault" {
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v0.3.12"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v0.3.13"
 
   vault_enterprise_license = var.vault_enterprise_license
 
