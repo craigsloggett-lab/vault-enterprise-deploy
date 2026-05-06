@@ -26,11 +26,11 @@ read_terraform_outputs() {
   )"
   asg_name="$(
     printf '%s\n' "${terraform_output}" |
-      jq -r '.vault_asg_name.value'
+      jq -r '.vault_cluster_autoscaling_group_name.value'
   )"
   ami_name="$(
     printf '%s\n' "${terraform_output}" |
-      jq -r '.ec2_ami_name.value'
+      jq -r '.ami_name.value'
   )"
 
   case "${ami_name}" in

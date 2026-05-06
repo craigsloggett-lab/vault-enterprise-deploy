@@ -20,10 +20,12 @@ read_terraform_outputs() {
   cd "$(dirname "$0")/.."
 
   terraform_output="$(terraform output -json)"
+
   asg_name="$(
     printf '%s\n' "${terraform_output}" |
-      jq -r '.vault_asg_name.value'
+      jq -r '.vault_cluster_autoscaling_group_name.value'
   )"
+
   log "  ASG:" "${asg_name}"
 }
 
@@ -85,18 +87,30 @@ wait_for_asg_to_be_empty() {
 delete_coordination_ssm_parameters() {
   log "Deleting coordination SSM parameters."
 
-  names="$(aws ssm describe-parameters \
-    --parameter-filters "Key=Name,Option=BeginsWith,Values=/lab/vault/" \
-    --query 'Parameters[].Name' --output text)"
+  bootstrap_cluster_state_ssm_parameter_name="$(
+    printf '%s\n' "${terraform_output}" |
+      jq -r '.bootstrap_cluster_state_ssm_parameter_name.value // empty'
+  )"
 
-  if [ -z "${names}" ]; then
-    log "  Nothing to delete."
-    return 0
-  fi
+  bootstrap_pki_state_ssm_parameter_name="$(
+    printf '%s\n' "${terraform_output}" |
+      jq -r '.bootstrap_pki_state_ssm_parameter_name.value // empty'
+  )"
 
-  log "  Deleting:" "$(printf '%s' "${names}" | tr '\t' ' ')"
-  # shellcheck disable=SC2086
-  aws ssm delete-parameters --names ${names} >/dev/null
+  vault_pki_intermediate_ca_ssm_parameter_name="$(
+    printf '%s\n' "${terraform_output}" |
+      jq -r '.vault_pki_intermediate_ca_ssm_parameter_name.value // empty'
+  )"
+
+  vault_pki_intermediate_ca_csr_ssm_parameter_name="$(
+    printf '%s\n' "${terraform_output}" |
+      jq -r '.vault_pki_intermediate_ca_csr_ssm_parameter_name.value // empty'
+  )"
+
+  aws ssm delete-parameter --name "${bootstrap_cluster_state_ssm_parameter_name}" >/dev/null
+  aws ssm delete-parameter --name "${bootstrap_pki_state_ssm_parameter_name}" >/dev/null
+  aws ssm delete-parameter --name "${vault_pki_intermediate_ca_ssm_parameter_name}" >/dev/null
+  aws ssm delete-parameter --name "${vault_pki_intermediate_ca_csr_ssm_parameter_name}" >/dev/null
 }
 
 delete_signed_intermediate_secret() {
@@ -104,7 +118,7 @@ delete_signed_intermediate_secret() {
 
   secret_arn="$(
     printf '%s\n' "${terraform_output}" |
-      jq -r '.vault_pki_intermediate_ca_signed_csr_secret_arn.value // empty'
+      jq -r '.vault_pki_signed_intermediate_ca_secret_arn.value // empty'
   )"
 
   if [ -z "${secret_arn}" ]; then

@@ -23,7 +23,7 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | d69263026635d463f0e0675f1fba3c809a1d4d84 |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 7929de1ddd801b8cfe486786c5f0d4d73e33d7c8 |
 
 ## Inputs
 
@@ -48,6 +48,7 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 | [aws_key_pair.selected](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/key_pair) | data source |
 | [aws_region.this](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/region) | data source |
 | [aws_route53_zone.vault](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/route53_zone) | data source |
+| [aws_ssm_parameter.vault_pki_intermediate_ca](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/ssm_parameter) | data source |
 | [aws_ssm_parameter.vault_pki_intermediate_ca_csr](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/ssm_parameter) | data source |
 | [aws_subnets.private](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/subnets) | data source |
 | [aws_subnets.public](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/subnets) | data source |
@@ -57,17 +58,19 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 
 | Name | Description |
 | ---- | ----------- |
+| <a name="output_ami_name"></a> [ami\_name](#output\_ami\_name) | Name of the AMI used for EC2 instances. |
 | <a name="output_bastion_public_ip"></a> [bastion\_public\_ip](#output\_bastion\_public\_ip) | Public IP of the bastion host. |
-| <a name="output_ec2_ami_name"></a> [ec2\_ami\_name](#output\_ec2\_ami\_name) | Name of the AMI used for EC2 instances. |
-| <a name="output_vault_asg_name"></a> [vault\_asg\_name](#output\_vault\_asg\_name) | Name of the Vault Auto Scaling Group. |
-| <a name="output_vault_iam_role_name"></a> [vault\_iam\_role\_name](#output\_vault\_iam\_role\_name) | Name of the Vault server IAM role. |
-| <a name="output_vault_jwt_auth_path"></a> [vault\_jwt\_auth\_path](#output\_vault\_jwt\_auth\_path) | Vault JWT auth method path for HCP Terraform. |
-| <a name="output_vault_jwt_auth_role_name"></a> [vault\_jwt\_auth\_role\_name](#output\_vault\_jwt\_auth\_role\_name) | Vault JWT auth role name for HCP Terraform. |
-| <a name="output_vault_pki_intermediate_ca_csr_ssm_parameter_name"></a> [vault\_pki\_intermediate\_ca\_csr\_ssm\_parameter\_name](#output\_vault\_pki\_intermediate\_ca\_csr\_ssm\_parameter\_name) | SSM parameter name where the intermediate CA CSR is published. |
-| <a name="output_vault_pki_signed_intermediate_ca_secret_arn"></a> [vault\_pki\_signed\_intermediate\_ca\_secret\_arn](#output\_vault\_pki\_signed\_intermediate\_ca\_secret\_arn) | Secrets Manager ARN for the signed intermediate CA certificate. |
-| <a name="output_vault_snapshots_bucket"></a> [vault\_snapshots\_bucket](#output\_vault\_snapshots\_bucket) | S3 bucket for Vault snapshots. |
-| <a name="output_vault_target_group_arn"></a> [vault\_target\_group\_arn](#output\_vault\_target\_group\_arn) | ARN of the Vault NLB target group. |
-| <a name="output_vault_tls_ca_bundle_ssm_parameter_name"></a> [vault\_tls\_ca\_bundle\_ssm\_parameter\_name](#output\_vault\_tls\_ca\_bundle\_ssm\_parameter\_name) | SSM Parameter for the Vault PKI managed TLS CA bundle. |
-| <a name="output_vault_url"></a> [vault\_url](#output\_vault\_url) | URL of the Vault cluster. |
+| <a name="output_bootstrap_cluster_state_ssm_parameter_name"></a> [bootstrap\_cluster\_state\_ssm\_parameter\_name](#output\_bootstrap\_cluster\_state\_ssm\_parameter\_name) | SSM Parameter for the bootstrap initialization state flag. |
+| <a name="output_bootstrap_pki_state_ssm_parameter_name"></a> [bootstrap\_pki\_state\_ssm\_parameter\_name](#output\_bootstrap\_pki\_state\_ssm\_parameter\_name) | SSM Parameter for the bootstrap PKI state flag. |
+| <a name="output_hcp_terraform_vault_addr"></a> [hcp\_terraform\_vault\_addr](#output\_hcp\_terraform\_vault\_addr) | Vault address for HCP Terraform (TFC\_VAULT\_ADDR). |
+| <a name="output_hcp_terraform_vault_auth_path"></a> [hcp\_terraform\_vault\_auth\_path](#output\_hcp\_terraform\_vault\_auth\_path) | Vault JWT auth method path for HCP Terraform (TFC\_VAULT\_AUTH\_PATH). |
+| <a name="output_hcp_terraform_vault_auth_run_role"></a> [hcp\_terraform\_vault\_auth\_run\_role](#output\_hcp\_terraform\_vault\_auth\_run\_role) | Vault JWT auth role name for HCP Terraform (TFC\_VAULT\_RUN\_ROLE). |
+| <a name="output_hcp_terraform_vault_encoded_cacert"></a> [hcp\_terraform\_vault\_encoded\_cacert](#output\_hcp\_terraform\_vault\_encoded\_cacert) | Vault JWT auth Base64-encoded CA certificate PEM for HCP Terraform (TFC\_VAULT\_ENCODED\_CACERT). |
+| <a name="output_vault_cluster_autoscaling_group_name"></a> [vault\_cluster\_autoscaling\_group\_name](#output\_vault\_cluster\_autoscaling\_group\_name) | Name of the Vault Enterprise Auto Scaling Group. |
+| <a name="output_vault_pki_intermediate_ca_csr_ssm_parameter_name"></a> [vault\_pki\_intermediate\_ca\_csr\_ssm\_parameter\_name](#output\_vault\_pki\_intermediate\_ca\_csr\_ssm\_parameter\_name) | SSM parameter name where the Vault PKI intermediate CA CSR is published. |
+| <a name="output_vault_pki_intermediate_ca_ssm_parameter_name"></a> [vault\_pki\_intermediate\_ca\_ssm\_parameter\_name](#output\_vault\_pki\_intermediate\_ca\_ssm\_parameter\_name) | SSM Parameter for the Vault PKI intermediate CA PEM. |
+| <a name="output_vault_pki_signed_intermediate_ca_secret_arn"></a> [vault\_pki\_signed\_intermediate\_ca\_secret\_arn](#output\_vault\_pki\_signed\_intermediate\_ca\_secret\_arn) | Secrets Manager ARN for the Vault PKI signed intermediate CA PEM. |
+| <a name="output_vault_snapshot_aws_s3_bucket_name"></a> [vault\_snapshot\_aws\_s3\_bucket\_name](#output\_vault\_snapshot\_aws\_s3\_bucket\_name) | Name of the S3 bucket for Vault Enterprise snapshots. |
+| <a name="output_vault_url"></a> [vault\_url](#output\_vault\_url) | URL of the Vault Enterprise cluster. |
 | <a name="output_vault_version"></a> [vault\_version](#output\_vault\_version) | Vault Enterprise version deployed. |
 <!-- END_TF_DOCS -->
