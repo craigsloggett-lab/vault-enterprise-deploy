@@ -73,10 +73,6 @@ module "vault" {
   vault_cluster = {
     instance_type = "t3.medium"
     node_count    = 3
-
-    auto_join = {
-      tag_value = data.aws_region.this.region
-    }
   }
 
   vault_pki = {
