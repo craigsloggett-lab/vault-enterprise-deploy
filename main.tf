@@ -49,6 +49,8 @@ data "aws_key_pair" "selected" {
 
 data "aws_ssm_parameter" "vault_pki_intermediate_ca" {
   name = module.vault.vault_pki_intermediate_ca_ssm_parameter_name
+
+  depends_on = [module.vault]
 }
 
 module "vault" {
