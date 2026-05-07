@@ -23,7 +23,7 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 659c64f4e3ba2b4e9fca651f2f7a0120b13ff6e8 |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 1dec72ab2992368b92cf5ccf22721ce02e97c2dd |
 
 ## Inputs
 
@@ -57,6 +57,7 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 | Name | Description |
 | ---- | ----------- |
 | <a name="output_ami_name"></a> [ami\_name](#output\_ami\_name) | Name of the AMI used for EC2 instances. |
+| <a name="output_autoscaling_group_name"></a> [autoscaling\_group\_name](#output\_autoscaling\_group\_name) | Name of the Vault Enterprise Auto Scaling Group. |
 | <a name="output_bastion_public_ip"></a> [bastion\_public\_ip](#output\_bastion\_public\_ip) | Public IP of the bastion host. |
 | <a name="output_bootstrap_cluster_state_ssm_parameter_name"></a> [bootstrap\_cluster\_state\_ssm\_parameter\_name](#output\_bootstrap\_cluster\_state\_ssm\_parameter\_name) | SSM Parameter for the bootstrap initialization state flag. |
 | <a name="output_bootstrap_pki_state_ssm_parameter_name"></a> [bootstrap\_pki\_state\_ssm\_parameter\_name](#output\_bootstrap\_pki\_state\_ssm\_parameter\_name) | SSM Parameter for the bootstrap PKI state flag. |
@@ -64,7 +65,6 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 | <a name="output_hcp_terraform_vault_auth_path"></a> [hcp\_terraform\_vault\_auth\_path](#output\_hcp\_terraform\_vault\_auth\_path) | Vault JWT auth method path for HCP Terraform (TFC\_VAULT\_AUTH\_PATH). |
 | <a name="output_hcp_terraform_vault_auth_run_role"></a> [hcp\_terraform\_vault\_auth\_run\_role](#output\_hcp\_terraform\_vault\_auth\_run\_role) | Vault JWT auth role name for HCP Terraform (TFC\_VAULT\_RUN\_ROLE). |
 | <a name="output_hcp_terraform_vault_encoded_cacert"></a> [hcp\_terraform\_vault\_encoded\_cacert](#output\_hcp\_terraform\_vault\_encoded\_cacert) | Vault JWT auth Base64-encoded CA certificate PEM for HCP Terraform (TFC\_VAULT\_ENCODED\_CACERT). |
-| <a name="output_vault_cluster_autoscaling_group_name"></a> [vault\_cluster\_autoscaling\_group\_name](#output\_vault\_cluster\_autoscaling\_group\_name) | Name of the Vault Enterprise Auto Scaling Group. |
 | <a name="output_vault_pki_intermediate_ca_csr_ssm_parameter_name"></a> [vault\_pki\_intermediate\_ca\_csr\_ssm\_parameter\_name](#output\_vault\_pki\_intermediate\_ca\_csr\_ssm\_parameter\_name) | SSM parameter name where the Vault PKI intermediate CA CSR is published. |
 | <a name="output_vault_pki_intermediate_ca_ssm_parameter_name"></a> [vault\_pki\_intermediate\_ca\_ssm\_parameter\_name](#output\_vault\_pki\_intermediate\_ca\_ssm\_parameter\_name) | SSM Parameter for the Vault PKI intermediate CA PEM. |
 | <a name="output_vault_pki_signed_intermediate_ca_secret_arn"></a> [vault\_pki\_signed\_intermediate\_ca\_secret\_arn](#output\_vault\_pki\_signed\_intermediate\_ca\_secret\_arn) | Secrets Manager ARN for the Vault PKI signed intermediate CA PEM. |

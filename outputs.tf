@@ -13,9 +13,9 @@ output "bastion_public_ip" {
   value       = module.vault.bastion_public_ip
 }
 
-output "vault_cluster_autoscaling_group_name" {
+output "autoscaling_group_name" {
   description = "Name of the Vault Enterprise Auto Scaling Group."
-  value       = module.vault.vault_cluster_autoscaling_group_name
+  value       = module.vault.autoscaling_group_name
 }
 
 output "ami_name" {
