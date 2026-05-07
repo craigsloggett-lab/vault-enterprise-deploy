@@ -23,15 +23,13 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | v0.3.13 |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 0331dffc15da184c14678fae64ae6588932a188f |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_ami_name"></a> [ami\_name](#input\_ami\_name) | Name filter for the AMI. | `string` | n/a | yes |
-| <a name="input_ami_owner"></a> [ami\_owner](#input\_ami\_owner) | AWS account ID of the AMI owner. | `string` | n/a | yes |
-| <a name="input_existing_vpc_name"></a> [existing\_vpc\_name](#input\_existing\_vpc\_name) | Name of the VPC to deploy Vault Enterprise to. | `string` | n/a | yes |
+| <a name="input_existing_vpc_name"></a> [existing\_vpc\_name](#input\_existing\_vpc\_name) | Name of the VPC to deploy Vault Enterprise to. | `string` | `"hashistack"` | no |
 | <a name="input_key_pair_key_name"></a> [key\_pair\_key\_name](#input\_key\_pair\_key\_name) | Name of an existing EC2 key pair for SSH access. | `string` | n/a | yes |
 | <a name="input_vault_enterprise_license"></a> [vault\_enterprise\_license](#input\_vault\_enterprise\_license) | Vault Enterprise license string. | `string` | n/a | yes |
 

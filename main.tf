@@ -35,11 +35,11 @@ data "aws_route53_zone" "vault" {
 
 data "aws_ami" "selected" {
   most_recent = true
-  owners      = [var.ami_owner]
+  owners      = ["888995627335"]
 
   filter {
     name   = "name"
-    values = [var.ami_name]
+    values = ["hc-base-ubuntu-2404-amd64-20260504145506"]
   }
 }
 
@@ -54,7 +54,8 @@ data "aws_ssm_parameter" "vault_pki_intermediate_ca" {
 }
 
 module "vault" {
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=v0.3.13"
+  # tflint-ignore: terraform_module_pinned_source
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=0331dffc15da184c14678fae64ae6588932a188f"
 
   vault_enterprise_license = var.vault_enterprise_license
 
