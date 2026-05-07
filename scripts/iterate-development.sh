@@ -23,7 +23,7 @@ read_terraform_outputs() {
 
   asg_name="$(
     printf '%s\n' "${terraform_output}" |
-      jq -r '.vault_cluster_autoscaling_group_name.value'
+      jq -r '.autoscaling_group_name.value'
   )"
 
   log "  ASG:" "${asg_name}"
