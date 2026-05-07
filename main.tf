@@ -55,7 +55,7 @@ data "aws_ssm_parameter" "vault_pki_intermediate_ca" {
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=97833b923951d51b57ea430724b29ff29eb7dd35"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=659c64f4e3ba2b4e9fca651f2f7a0120b13ff6e8"
 
   vault_enterprise_license = var.vault_enterprise_license
 
@@ -97,7 +97,7 @@ module "vault" {
     }
   }
 
-  hcp_terraform_jwt_auth = {
+  vault_auth_jwt_hcp_terraform = {
     hostname          = "app.terraform.io"
     organization_name = "craigsloggett-lab"
   }

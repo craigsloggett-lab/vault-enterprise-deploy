@@ -60,12 +60,12 @@ output "hcp_terraform_vault_addr" {
 
 output "hcp_terraform_vault_auth_path" {
   description = "Vault JWT auth method path for HCP Terraform (TFC_VAULT_AUTH_PATH)."
-  value       = module.vault.hcp_terraform_jwt_auth_mount_path
+  value       = module.vault.vault_auth_jwt_hcp_terraform_mount_path
 }
 
 output "hcp_terraform_vault_auth_run_role" {
   description = "Vault JWT auth role name for HCP Terraform (TFC_VAULT_RUN_ROLE)."
-  value       = module.vault.hcp_terraform_jwt_auth_role_name
+  value       = module.vault.vault_auth_jwt_hcp_terraform_role_name
 }
 
 output "hcp_terraform_vault_encoded_cacert" {
