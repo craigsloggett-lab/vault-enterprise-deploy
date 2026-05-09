@@ -23,7 +23,7 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | fa687ce9ca7d558b166c0943fa0eb4b07523ee5e |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 2783fb5f0a0c892ab165097da42cda2a5a3a19b9 |
 
 ## Inputs
 
@@ -60,6 +60,7 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 | <a name="output_autoscaling_group_name"></a> [autoscaling\_group\_name](#output\_autoscaling\_group\_name) | Name of the Vault Enterprise Auto Scaling Group. |
 | <a name="output_bastion_public_ip"></a> [bastion\_public\_ip](#output\_bastion\_public\_ip) | Public IP of the bastion host. |
 | <a name="output_bootstrap_cluster_state_ssm_parameter_name"></a> [bootstrap\_cluster\_state\_ssm\_parameter\_name](#output\_bootstrap\_cluster\_state\_ssm\_parameter\_name) | SSM Parameter for the bootstrap initialization state flag. |
+| <a name="output_bootstrap_node_id_ssm_parameter_name"></a> [bootstrap\_node\_id\_ssm\_parameter\_name](#output\_bootstrap\_node\_id\_ssm\_parameter\_name) | SSM Parameter for the bootstrap PKI state flag. |
 | <a name="output_bootstrap_pki_state_ssm_parameter_name"></a> [bootstrap\_pki\_state\_ssm\_parameter\_name](#output\_bootstrap\_pki\_state\_ssm\_parameter\_name) | SSM Parameter for the bootstrap PKI state flag. |
 | <a name="output_hcp_terraform_vault_addr"></a> [hcp\_terraform\_vault\_addr](#output\_hcp\_terraform\_vault\_addr) | Vault address for HCP Terraform (TFC\_VAULT\_ADDR). |
 | <a name="output_hcp_terraform_vault_auth_path"></a> [hcp\_terraform\_vault\_auth\_path](#output\_hcp\_terraform\_vault\_auth\_path) | Vault JWT auth method path for HCP Terraform (TFC\_VAULT\_AUTH\_PATH). |

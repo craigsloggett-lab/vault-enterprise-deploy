@@ -97,6 +97,11 @@ delete_coordination_ssm_parameters() {
       jq -r '.bootstrap_pki_state_ssm_parameter_name.value // empty'
   )"
 
+  bootstrap_node_id_ssm_parameter_name="$(
+    printf '%s\n' "${terraform_output}" |
+      jq -r '.bootstrap_node_id_ssm_parameter_name.value // empty'
+  )"
+
   vault_pki_intermediate_ca_ssm_parameter_name="$(
     printf '%s\n' "${terraform_output}" |
       jq -r '.vault_pki_intermediate_ca_ssm_parameter_name.value // empty'
@@ -109,6 +114,7 @@ delete_coordination_ssm_parameters() {
 
   aws ssm delete-parameter --name "${bootstrap_cluster_state_ssm_parameter_name}" >/dev/null
   aws ssm delete-parameter --name "${bootstrap_pki_state_ssm_parameter_name}" >/dev/null
+  aws ssm delete-parameter --name "${bootstrap_node_id_ssm_parameter_name}" >/dev/null
   aws ssm delete-parameter --name "${vault_pki_intermediate_ca_ssm_parameter_name}" >/dev/null
   aws ssm delete-parameter --name "${vault_pki_intermediate_ca_csr_ssm_parameter_name}" >/dev/null
 }

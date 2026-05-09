@@ -38,6 +38,11 @@ output "bootstrap_pki_state_ssm_parameter_name" {
   value       = module.vault.bootstrap_pki_state_ssm_parameter_name
 }
 
+output "bootstrap_node_id_ssm_parameter_name" {
+  description = "SSM Parameter for the bootstrap PKI state flag."
+  value       = module.vault.bootstrap_node_id_ssm_parameter_name
+}
+
 output "vault_pki_intermediate_ca_ssm_parameter_name" {
   description = "SSM Parameter for the Vault PKI intermediate CA PEM."
   value       = module.vault.vault_pki_intermediate_ca_ssm_parameter_name
