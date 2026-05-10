@@ -55,7 +55,7 @@ data "aws_ssm_parameter" "vault_pki_intermediate_ca" {
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=5297b8c99d0f6e6537fb59745be8de92ec2d764f"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=33031e6c52c21485be78012fdc4716a55ef6614a"
 
   vault_enterprise_license = var.vault_enterprise_license
 
@@ -74,6 +74,21 @@ module "vault" {
   compute = {
     instance_type = "t3.medium"
     node_count    = 3
+
+    root_disk = {
+      iops       = 3000
+      throughput = 125
+    }
+
+    raft_data_disk = {
+      iops       = 3000
+      throughput = 125
+    }
+
+    audit_disk = {
+      iops       = 3000
+      throughput = 125
+    }
   }
 
   vault_pki = {
