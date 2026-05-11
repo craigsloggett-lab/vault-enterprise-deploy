@@ -23,7 +23,7 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 8e53171e546bfa77baedfc89f63c358e5aa6187f |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | c2483bf7bc59ab40cd520cf3257c0070fe6a767a |
 
 ## Inputs
 
