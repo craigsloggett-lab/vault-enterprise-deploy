@@ -1,5 +1,3 @@
-data "aws_region" "this" {}
-
 data "aws_vpc" "selected" {
   filter {
     name   = "tag:Name"
@@ -55,7 +53,7 @@ data "aws_ssm_parameter" "vault_pki_intermediate_ca" {
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=625ec34e23e88e5786c02dbe94a78a5707c14f3a"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=059d8edda87bc9b3aeb4cd7002dc1d3c07c3ec95"
 
   vault_enterprise_license = var.vault_enterprise_license
 
