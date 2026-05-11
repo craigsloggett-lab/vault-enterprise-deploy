@@ -84,6 +84,21 @@ wait_for_asg_to_be_empty() {
   log "  ASG is empty."
 }
 
+delete_ssm_parameter_if_exists() {
+  name="$1"
+
+  if [ -z "${name}" ]; then
+    return 0
+  fi
+
+  if aws ssm get-parameter --name "${name}" >/dev/null 2>&1; then
+    aws ssm delete-parameter --name "${name}" >/dev/null
+    log "  Deleted:" "${name}"
+  else
+    log "  Skipped (not found):" "${name}"
+  fi
+}
+
 delete_coordination_ssm_parameters() {
   log "Deleting coordination SSM parameters."
 
@@ -112,11 +127,11 @@ delete_coordination_ssm_parameters() {
       jq -r '.vault_pki_intermediate_ca_csr_ssm_parameter_name.value // empty'
   )"
 
-  aws ssm delete-parameter --name "${bootstrap_cluster_state_ssm_parameter_name}" >/dev/null
-  aws ssm delete-parameter --name "${bootstrap_pki_state_ssm_parameter_name}" >/dev/null
-  aws ssm delete-parameter --name "${bootstrap_node_id_ssm_parameter_name}" >/dev/null
-  aws ssm delete-parameter --name "${vault_pki_intermediate_ca_ssm_parameter_name}" >/dev/null
-  aws ssm delete-parameter --name "${vault_pki_intermediate_ca_csr_ssm_parameter_name}" >/dev/null
+  delete_ssm_parameter_if_exists "${bootstrap_cluster_state_ssm_parameter_name}"
+  delete_ssm_parameter_if_exists "${bootstrap_pki_state_ssm_parameter_name}"
+  delete_ssm_parameter_if_exists "${bootstrap_node_id_ssm_parameter_name}"
+  delete_ssm_parameter_if_exists "${vault_pki_intermediate_ca_ssm_parameter_name}"
+  delete_ssm_parameter_if_exists "${vault_pki_intermediate_ca_csr_ssm_parameter_name}"
 }
 
 delete_signed_intermediate_secret() {
