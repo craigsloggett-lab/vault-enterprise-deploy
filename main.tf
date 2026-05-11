@@ -53,7 +53,7 @@ data "aws_ssm_parameter" "vault_pki_intermediate_ca" {
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=ba81c0e8141069a7b3abb0ce7e3ae99c9b3615a1"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=ca3bc6cbf3e61319e552b00bfffd0c32e4cb8146"
 
   vault_enterprise_license = var.vault_enterprise_license
 
