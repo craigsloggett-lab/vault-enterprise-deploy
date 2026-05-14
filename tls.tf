@@ -36,7 +36,7 @@ resource "terraform_data" "wait_for_csr" {
     command = "${path.module}/files/wait-for-csr.sh"
     environment = {
       PARAMETER_NAME = self.input
-      TIMEOUT_SEC    = "1800"
+      TIMEOUT_SEC    = "180"
       REGION         = data.aws_region.current.region
     }
   }
