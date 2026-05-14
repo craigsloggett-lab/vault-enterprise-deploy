@@ -45,15 +45,15 @@ data "aws_key_pair" "selected" {
   key_name = var.key_pair_key_name
 }
 
-data "aws_ssm_parameter" "vault_pki_intermediate_ca" {
-  name = module.vault.vault_pki_intermediate_ca_ssm_parameter_name
+data "aws_ssm_parameter" "vault_pki_ca_chain" {
+  name = module.vault.vault_pki_ca_chain_ssm_parameter_name
 
   depends_on = [module.vault]
 }
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=1007990c9fecd410179cf181a673af55ceb85a14"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=3f138028a0f79c442b52b3a93ade7c2bbc413b72"
 
   vault_enterprise_license = var.vault_enterprise_license
   vault_fqdn               = "vault.${data.aws_route53_zone.vault.name}"

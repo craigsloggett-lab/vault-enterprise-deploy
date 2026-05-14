@@ -43,9 +43,9 @@ output "bootstrap_node_id_ssm_parameter_name" {
   value       = module.vault.bootstrap_node_id_ssm_parameter_name
 }
 
-output "vault_pki_intermediate_ca_ssm_parameter_name" {
-  description = "SSM Parameter for the Vault PKI intermediate CA PEM."
-  value       = module.vault.vault_pki_intermediate_ca_ssm_parameter_name
+output "vault_pki_ca_chain_ssm_parameter_name" {
+  description = "SSM Parameter for the Vault PKI CA chain PEM."
+  value       = module.vault.vault_pki_ca_chain_ssm_parameter_name
 }
 
 output "vault_pki_intermediate_ca_csr_ssm_parameter_name" {
@@ -75,6 +75,6 @@ output "hcp_terraform_vault_auth_run_role" {
 
 output "hcp_terraform_vault_encoded_cacert" {
   description = "Vault JWT auth Base64-encoded CA certificate PEM for HCP Terraform (TFC_VAULT_ENCODED_CACERT)."
-  value       = base64encode(data.aws_ssm_parameter.vault_pki_intermediate_ca.value)
+  value       = base64encode(data.aws_ssm_parameter.vault_pki_ca_chain.value)
   sensitive   = true
 }

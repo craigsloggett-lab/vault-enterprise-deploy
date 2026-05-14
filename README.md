@@ -23,7 +23,7 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 1007990c9fecd410179cf181a673af55ceb85a14 |
+| <a name="module_vault"></a> [vault](#module\_vault) | git::https://github.com/craigsloggett/terraform-aws-vault-enterprise | 3f138028a0f79c442b52b3a93ade7c2bbc413b72 |
 
 ## Inputs
 
@@ -46,7 +46,7 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 | [aws_key_pair.selected](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/key_pair) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/region) | data source |
 | [aws_route53_zone.vault](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/route53_zone) | data source |
-| [aws_ssm_parameter.vault_pki_intermediate_ca](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/ssm_parameter) | data source |
+| [aws_ssm_parameter.vault_pki_ca_chain](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/ssm_parameter) | data source |
 | [aws_ssm_parameter.vault_pki_intermediate_ca_csr](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/ssm_parameter) | data source |
 | [aws_subnets.private](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/subnets) | data source |
 | [aws_subnets.public](https://registry.terraform.io/providers/hashicorp/aws/6.43.0/docs/data-sources/subnets) | data source |
@@ -66,8 +66,8 @@ An infrastructure as code repository used to deploy a Vault Enterprise cluster t
 | <a name="output_hcp_terraform_vault_auth_path"></a> [hcp\_terraform\_vault\_auth\_path](#output\_hcp\_terraform\_vault\_auth\_path) | Vault JWT auth method path for HCP Terraform (TFC\_VAULT\_AUTH\_PATH). |
 | <a name="output_hcp_terraform_vault_auth_run_role"></a> [hcp\_terraform\_vault\_auth\_run\_role](#output\_hcp\_terraform\_vault\_auth\_run\_role) | Vault JWT auth role name for HCP Terraform (TFC\_VAULT\_RUN\_ROLE). |
 | <a name="output_hcp_terraform_vault_encoded_cacert"></a> [hcp\_terraform\_vault\_encoded\_cacert](#output\_hcp\_terraform\_vault\_encoded\_cacert) | Vault JWT auth Base64-encoded CA certificate PEM for HCP Terraform (TFC\_VAULT\_ENCODED\_CACERT). |
+| <a name="output_vault_pki_ca_chain_ssm_parameter_name"></a> [vault\_pki\_ca\_chain\_ssm\_parameter\_name](#output\_vault\_pki\_ca\_chain\_ssm\_parameter\_name) | SSM Parameter for the Vault PKI CA chain PEM. |
 | <a name="output_vault_pki_intermediate_ca_csr_ssm_parameter_name"></a> [vault\_pki\_intermediate\_ca\_csr\_ssm\_parameter\_name](#output\_vault\_pki\_intermediate\_ca\_csr\_ssm\_parameter\_name) | SSM parameter name where the Vault PKI intermediate CA CSR is published. |
-| <a name="output_vault_pki_intermediate_ca_ssm_parameter_name"></a> [vault\_pki\_intermediate\_ca\_ssm\_parameter\_name](#output\_vault\_pki\_intermediate\_ca\_ssm\_parameter\_name) | SSM Parameter for the Vault PKI intermediate CA PEM. |
 | <a name="output_vault_pki_signed_intermediate_ca_secret_arn"></a> [vault\_pki\_signed\_intermediate\_ca\_secret\_arn](#output\_vault\_pki\_signed\_intermediate\_ca\_secret\_arn) | Secrets Manager ARN for the Vault PKI signed intermediate CA PEM. |
 | <a name="output_vault_snapshot_aws_s3_bucket_name"></a> [vault\_snapshot\_aws\_s3\_bucket\_name](#output\_vault\_snapshot\_aws\_s3\_bucket\_name) | Name of the S3 bucket for Vault Enterprise snapshots. |
 | <a name="output_vault_url"></a> [vault\_url](#output\_vault\_url) | URL of the Vault Enterprise cluster. |
