@@ -102,14 +102,14 @@ delete_ssm_parameter_if_exists() {
 delete_coordination_ssm_parameters() {
   log "Deleting coordination SSM parameters."
 
-  bootstrap_cluster_state_ssm_parameter_name="$(
+  bootstrap_vault_cluster_state_ssm_parameter_name="$(
     printf '%s\n' "${terraform_output}" |
-      jq -r '.bootstrap_cluster_state_ssm_parameter_name.value // empty'
+      jq -r '.bootstrap_vault_cluster_state_ssm_parameter_name.value // empty'
   )"
 
-  bootstrap_pki_state_ssm_parameter_name="$(
+  bootstrap_vault_pki_state_ssm_parameter_name="$(
     printf '%s\n' "${terraform_output}" |
-      jq -r '.bootstrap_pki_state_ssm_parameter_name.value // empty'
+      jq -r '.bootstrap_vault_pki_state_ssm_parameter_name.value // empty'
   )"
 
   bootstrap_instance_id_ssm_parameter_name="$(
@@ -127,8 +127,8 @@ delete_coordination_ssm_parameters() {
       jq -r '.vault_pki_intermediate_ca_csr_ssm_parameter_name.value // empty'
   )"
 
-  delete_ssm_parameter_if_exists "${bootstrap_cluster_state_ssm_parameter_name}"
-  delete_ssm_parameter_if_exists "${bootstrap_pki_state_ssm_parameter_name}"
+  delete_ssm_parameter_if_exists "${bootstrap_vault_cluster_state_ssm_parameter_name}"
+  delete_ssm_parameter_if_exists "${bootstrap_vault_pki_state_ssm_parameter_name}"
   delete_ssm_parameter_if_exists "${bootstrap_instance_id_ssm_parameter_name}"
   delete_ssm_parameter_if_exists "${vault_pki_intermediate_ca_ssm_parameter_name}"
   delete_ssm_parameter_if_exists "${vault_pki_intermediate_ca_csr_ssm_parameter_name}"
