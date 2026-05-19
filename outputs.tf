@@ -28,19 +28,19 @@ output "vault_snapshot_aws_s3_bucket_name" {
   value       = module.vault.vault_snapshot_aws_s3_bucket_name
 }
 
-output "bootstrap_cluster_state_ssm_parameter_name" {
+output "bootstrap_vault_cluster_state_ssm_parameter_name" {
   description = "SSM Parameter for the bootstrap initialization state flag."
-  value       = module.vault.bootstrap_cluster_state_ssm_parameter_name
+  value       = module.vault.bootstrap_vault_cluster_state_ssm_parameter_name
 }
 
-output "bootstrap_pki_state_ssm_parameter_name" {
-  description = "SSM Parameter for the bootstrap PKI state flag."
-  value       = module.vault.bootstrap_pki_state_ssm_parameter_name
+output "bootstrap_vault_pki_state_ssm_parameter_name" {
+  description = "SSM Parameter for the bootstrap Vault PKI state flag."
+  value       = module.vault.bootstrap_vault_pki_state_ssm_parameter_name
 }
 
-output "bootstrap_node_id_ssm_parameter_name" {
-  description = "SSM Parameter for the bootstrap PKI state flag."
-  value       = module.vault.bootstrap_node_id_ssm_parameter_name
+output "bootstrap_instance_id_ssm_parameter_name" {
+  description = "SSM Parameter for the elected bootstrap node EC2 instance ID."
+  value       = module.vault.bootstrap_instance_id_ssm_parameter_name
 }
 
 output "vault_pki_ca_chain_ssm_parameter_name" {
