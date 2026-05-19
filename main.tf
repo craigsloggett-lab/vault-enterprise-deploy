@@ -53,7 +53,7 @@ data "aws_ssm_parameter" "vault_pki_ca_chain" {
 
 module "vault" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=11e233833f05509c076eb5f968e44b975087b209"
+  source = "git::https://github.com/craigsloggett/terraform-aws-vault-enterprise?ref=2f497988496685bc40975386589ded5b3ad8a9fb"
 
   vault_enterprise_license = var.vault_enterprise_license
   vault_fqdn               = "vault.${data.aws_route53_zone.vault.name}"

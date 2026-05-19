@@ -112,9 +112,9 @@ delete_coordination_ssm_parameters() {
       jq -r '.bootstrap_pki_state_ssm_parameter_name.value // empty'
   )"
 
-  bootstrap_node_id_ssm_parameter_name="$(
+  bootstrap_instance_id_ssm_parameter_name="$(
     printf '%s\n' "${terraform_output}" |
-      jq -r '.bootstrap_node_id_ssm_parameter_name.value // empty'
+      jq -r '.bootstrap_instance_id_ssm_parameter_name.value // empty'
   )"
 
   vault_pki_intermediate_ca_ssm_parameter_name="$(
@@ -129,7 +129,7 @@ delete_coordination_ssm_parameters() {
 
   delete_ssm_parameter_if_exists "${bootstrap_cluster_state_ssm_parameter_name}"
   delete_ssm_parameter_if_exists "${bootstrap_pki_state_ssm_parameter_name}"
-  delete_ssm_parameter_if_exists "${bootstrap_node_id_ssm_parameter_name}"
+  delete_ssm_parameter_if_exists "${bootstrap_instance_id_ssm_parameter_name}"
   delete_ssm_parameter_if_exists "${vault_pki_intermediate_ca_ssm_parameter_name}"
   delete_ssm_parameter_if_exists "${vault_pki_intermediate_ca_csr_ssm_parameter_name}"
 }
