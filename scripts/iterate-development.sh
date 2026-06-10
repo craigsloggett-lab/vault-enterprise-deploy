@@ -164,6 +164,13 @@ remove_wait_for_csr_from_state() {
 main() {
   set -ef
 
+  # The aws calls below carry no --region flag and rely on the ambient region. Honor an
+  # explicit AWS_REGION/AWS_DEFAULT_REGION, otherwise default to us-east-1 (the region
+  # pinned in providers.tf) so the script works regardless of the caller's shell env.
+  AWS_REGION="${AWS_REGION:-${AWS_DEFAULT_REGION:-us-east-1}}"
+  AWS_DEFAULT_REGION="${AWS_REGION}"
+  export AWS_REGION AWS_DEFAULT_REGION
+
   # Get host IPs
   read_terraform_outputs
 
