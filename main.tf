@@ -101,8 +101,9 @@ module "vault" {
   }
 
   nlb = {
-    internal          = false
-    api_allowed_cidrs = ["0.0.0.0/0"]
+    internal            = false
+    api_allowed_cidrs   = ["0.0.0.0/0"]
+    deletion_protection = false
   }
 
   vault_snapshot = {
