@@ -4,8 +4,9 @@
 # Node replacement test for a running Vault cluster. Terminates one follower (any
 # InService node that is not the elected bootstrap node), lets the Auto Scaling
 # group launch a replacement, then verifies the new node rejoins raft and obtains
-# a Vault PKI certificate, and that Raft Autopilot evicts the terminated node so
-# the cluster returns to a healthy quorum.
+# a Vault PKI certificate, and that Raft Autopilot demotes the terminated node out
+# of the voter set so the cluster returns to a healthy quorum (full peer removal
+# follows the 24h dead-server last-contact threshold).
 #
 # The replacement is the first node to exercise the module's Ready:Ready join path
 # (it trusts the existing nodes' PKI listeners via the Vault PKI CA chain in SSM,
@@ -134,6 +135,13 @@ raft_peers() {
   vault operator raft list-peers
 }
 
+# autopilot_state returns Raft Autopilot state as JSON. The CLI payload may or may
+# not be wrapped under .data depending on version, so callers normalize the root
+# with `(.data // .)`.
+autopilot_state() {
+  vault operator raft autopilot state -format=json
+}
+
 terminate_victim() {
   log "Terminating follower (ASG keeps desired capacity, so it replaces it):" "${victim}"
 
@@ -224,43 +232,49 @@ show_join_log() {
     grep -E '\[INFO\]|\[WARN\]|\[ERROR\]|Finished cloud-final' || true
 }
 
-# verify_raft polls until the replacement has joined and Autopilot has evicted the
-# terminated node, or a timeout. Eviction is not instant: it follows the dead
-# server last-contact threshold configured on the bootstrap node.
+# verify_raft polls until the cluster is back to a healthy quorum: the replacement
+# is promoted to voter, the expected number of voters is present, and the terminated
+# node has been demoted out of the voter set. Autopilot demotes a failed server
+# within seconds; it does not *remove* the peer entry until the dead-server
+# last-contact threshold (24h by default) elapses, and that removal is not required
+# for a healthy cluster, so we assert demotion, not removal.
 verify_raft() {
-  log "Verifying raft convergence (replacement joined, dead node evicted)."
+  log "Verifying raft convergence (replacement promoted, dead node demoted, quorum healthy)."
 
   timeout_seconds=420
   waited=0
 
   while :; do
-    peers="$(raft_peers 2>/dev/null || true)"
+    state="$(autopilot_state 2>/dev/null || true)"
 
-    if printf '%s\n' "${peers}" | grep -q "${new_id}"; then
-      has_new=1
-    else
-      has_new=0
-    fi
+    # `autopilot state -format=json` emits CamelCase keys (Voters, Servers,
+    # Healthy) with no .data envelope; (.data // .) keeps this robust if a future
+    # CLI wraps it. Health is asserted over the voter set, not the top-level
+    # Healthy flag: a terminated node lingers as an unhealthy non-voter until the
+    # 24h dead-server threshold removes it, which holds the top-level flag false
+    # while quorum is fine. An empty/invalid read leaves the vars blank (|| true),
+    # so a transient CLI hiccup just fails the comparisons and the loop retries.
+    voters="$(printf '%s' "${state}" | jq -r '[(.data // .).Voters[]?] | length' 2>/dev/null || true)"
+    voters_healthy="$(printf '%s' "${state}" | jq -r '(.data // .) as $s | ($s.Voters // []) as $v | (($v | length) > 0) and ([$v[] | $s.Servers[.].Healthy] | all)' 2>/dev/null || true)"
+    new_is_voter="$(printf '%s' "${state}" | jq -r --arg n "${new_id}" 'any((.data // .).Voters[]?; . == $n)' 2>/dev/null || true)"
+    victim_is_voter="$(printf '%s' "${state}" | jq -r --arg v "${victim}" 'any((.data // .).Voters[]?; . == $v)' 2>/dev/null || true)"
 
-    if printf '%s\n' "${peers}" | grep -q "${victim}"; then
-      has_victim=1
-    else
-      has_victim=0
-    fi
-
-    if [ "${has_new}" = 1 ] && [ "${has_victim}" = 0 ]; then
-      log "Final raft peers:"
-      printf '%s\n' "${peers}"
-      voters="$(printf '%s\n' "${peers}" | grep -cw true || true)"
-      log "  PASS:" "replacement ${new_id} joined, ${victim} evicted, voters=${voters}"
+    if [ "${voters_healthy}" = "true" ] && [ "${new_is_voter}" = "true" ] &&
+      [ "${victim_is_voter}" = "false" ] && [ "${voters}" = "${expected_voters}" ]; then
+      log "Final autopilot state:"
+      vault operator raft autopilot state || true
+      log "  PASS:" "replacement ${new_id} is a voter, ${victim} demoted, healthy quorum of ${voters} voters"
       return 0
     fi
 
     if [ "${waited}" -ge "${timeout_seconds}" ]; then
-      log "Final raft peers:"
-      printf '%s\n' "${peers}"
-      [ "${has_new}" = 1 ] || log "  FAIL:" "replacement ${new_id} never joined raft"
-      [ "${has_victim}" = 0 ] || log "  FAIL:" "terminated ${victim} still a peer (autopilot did not evict)"
+      log "Final autopilot state:"
+      vault operator raft autopilot state || true
+      [ -n "${voters}" ] || log "  FAIL:" "could not read autopilot state (empty or invalid JSON)"
+      [ "${voters}" = "${expected_voters}" ] || log "  FAIL:" "voter count ${voters:-?} != expected ${expected_voters}"
+      [ "${new_is_voter}" = "true" ] || log "  FAIL:" "replacement ${new_id} was not promoted to voter"
+      [ "${victim_is_voter}" = "false" ] || log "  FAIL:" "terminated ${victim} is still a voter (not demoted)"
+      [ "${voters_healthy}" = "true" ] || log "  FAIL:" "one or more voters are unhealthy"
       return 1
     fi
 
@@ -296,6 +310,10 @@ main() {
       log "ERROR: need at least 3 InService nodes to replace one and keep quorum (have $#)."
       exit 1
     }
+
+  # After the replacement converges the cluster should have the same number of
+  # voters it started with.
+  expected_voters="$#"
 
   select_victim
   setup_vault_env
