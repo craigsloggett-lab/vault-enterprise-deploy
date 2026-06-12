@@ -31,3 +31,6 @@ terraform.rc
 
 # Vault initialization output (contains root token and recovery keys)
 vault-init.json
+
+# Local environment exports
+scripts/environment.sh

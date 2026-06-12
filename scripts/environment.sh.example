@@ -1,0 +1,15 @@
+# shellcheck shell=sh
+# Environment required by scripts/get-cloud-init-logs.sh (and terraform/aws CLI
+# use in general). Copy to scripts/environment.sh and fill in your own values;
+# that copy is gitignored. Sourced fresh on every `make logs`, so commands that
+# fetch short-lived credentials work too.
+
+export AWS_REGION="us-east-1"
+
+# Terraform Cloud API token used by the terraform CLI.
+export TF_TOKEN_app_terraform_io=""
+
+# AWS credentials, however you obtain them (static keys, SSO, a credential helper).
+export AWS_ACCESS_KEY_ID=""
+export AWS_SECRET_ACCESS_KEY=""
+export AWS_SESSION_TOKEN=""
