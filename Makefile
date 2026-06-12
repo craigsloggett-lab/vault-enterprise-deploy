@@ -5,7 +5,7 @@ COMMIT_MSG  ?= Validate recent module changes
 .PHONY: help
 .PHONY: bump latest
 .PHONY: init validate fmt lint docs check plan
-.PHONY: stage commit push ship iterate logs
+.PHONY: stage commit push ship iterate logs replace-node
 .PHONY: cycle update
 
 help:
@@ -32,6 +32,9 @@ help:
 	@printf '%s\n' "  push      git push"
 	@printf '%s\n' "  iterate   ./scripts/iterate-development.sh"
 	@printf '%s\n' "  logs      source scripts/environment.sh, then get-cloud-init-logs.sh"
+	@printf '\n'
+	@printf '%s\n' "Tests:"
+	@printf '%s\n' "  replace-node  Terminate a follower, verify the replacement rejoins raft and gets a PKI cert"
 	@printf '\n'
 	@printf '%s\n' "Override: MODULE_REPO=<url>"
 
@@ -101,6 +104,15 @@ logs:
 	fi
 	@. ./scripts/environment.sh && \
 	scripts/get-cloud-init-logs.sh
+
+replace-node:
+	@if [ ! -f scripts/environment.sh ]; then \
+		printf '%s\n' "Error: scripts/environment.sh not found." >&2; \
+		printf '%s\n' "Copy scripts/environment.sh.example and edit it." >&2; \
+		exit 1; \
+	fi
+	@. ./scripts/environment.sh && \
+	scripts/replace-node.sh
 
 cycle: COMMIT_MSG = Validate recent module changes
 cycle: bump check iterate ship
