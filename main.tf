@@ -37,7 +37,7 @@ data "aws_ami" "selected" {
 
   filter {
     name   = "name"
-    values = ["hc-base-ubuntu-2404-amd64-20260504145506"]
+    values = ["hc-base-ubuntu-2404-amd64-20260727102628"]
   }
 }
 
